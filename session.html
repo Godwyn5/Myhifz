@@ -352,25 +352,16 @@
 
     /* ── STATE ── */
     let currentIndex = 0;
-    let ayatCache    = {};
+    let prefetched   = []; /* filled at init with all ayat data */
 
-    /* ── FETCH AYAT FROM API ── */
-    async function fetchAyat(surah, ayah) {
-      const key = `${surah}:${ayah}`;
-      if (ayatCache[key]) return ayatCache[key];
-
+    /* ── FETCH ONE AYAT ── */
+    async function fetchOne(surah, ayah) {
       const url = `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/editions/quran-uthmani,en.transliteration,fr.hamidullah`;
       const res  = await fetch(url);
       if (!res.ok) throw new Error('API error');
       const json = await res.json();
-      const data = json.data;
-      const result = {
-        arabic:          data[0].text,
-        transliteration: data[1].text,
-        translation:     data[2].text,
-      };
-      ayatCache[key] = result;
-      return result;
+      const d    = json.data;
+      return { arabic: d[0].text, transliteration: d[1].text, translation: d[2].text };
     }
 
     /* ── SHOW LOADING ── */
@@ -379,14 +370,14 @@
       document.getElementById('ayat-content').style.display  = 'none';
     }
 
-    /* ── SHOW AYAT DATA ── */
+    /* ── SHOW AYAT DATA (from prefetched array — no API call) ── */
     function showAyatData(data, ayahNum) {
-      document.getElementById('ayat-number').textContent         = `AYAT ${ayahNum}`;
-      document.getElementById('ayat-arabic').textContent         = data.arabic;
+      document.getElementById('ayat-number').textContent          = `AYAT ${ayahNum}`;
+      document.getElementById('ayat-arabic').textContent          = data.arabic;
       document.getElementById('ayat-transliteration').textContent = data.transliteration;
-      document.getElementById('ayat-translation').textContent    = data.translation;
-      document.getElementById('loading-wrap').style.display      = 'none';
-      document.getElementById('ayat-content').style.display      = 'block';
+      document.getElementById('ayat-translation').textContent     = data.translation;
+      document.getElementById('loading-wrap').style.display       = 'none';
+      document.getElementById('ayat-content').style.display       = 'block';
     }
 
     /* ── SHOW ERROR ── */
@@ -409,22 +400,17 @@
       document.getElementById('header-counter').textContent  = `${current} / ${total}`;
 
       const btnNext = document.getElementById('btn-next');
-      if (currentIndex === total - 1) {
-        btnNext.textContent = 'Terminer la mémorisation ✓';
-      } else {
-        btnNext.textContent = 'Suivant →';
-      }
+      btnNext.textContent = (currentIndex === total - 1) ? 'Terminer la mémorisation ✓' : 'Suivant →';
     }
 
-    /* ── LOAD CURRENT AYAT ── */
-    async function loadCurrent() {
-      showLoading();
+    /* ── DISPLAY CURRENT (from memory — instant) ── */
+    function loadCurrent() {
       updateProgress();
-      try {
-        const ayahNum = ayatList[currentIndex];
-        const data    = await fetchAyat(currentSurah, ayahNum);
+      const ayahNum = ayatList[currentIndex];
+      const data    = prefetched[currentIndex];
+      if (data) {
         showAyatData(data, ayahNum);
-      } catch (e) {
+      } else {
         showError();
       }
     }
@@ -447,20 +433,23 @@
       }, 300);
     }
 
-    /* ── REPLAY (re-render current) ── */
-    function replayAyat() {
-      const card = document.getElementById('ayat-card');
-      card.classList.add('fade-out');
-      setTimeout(() => {
-        card.classList.remove('fade-out');
+    /* ── INIT — prefetch all ayat in parallel ── */
+    async function init() {
+      showLoading();
+      updateProgress();
+      try {
+        /* Fire all fetch calls simultaneously */
+        prefetched = await Promise.all(
+          ayatList.map(ayah => fetchOne(currentSurah, ayah))
+        );
+        /* Show first ayat immediately from memory */
         loadCurrent();
-        card.classList.add('fade-in');
-        setTimeout(() => card.classList.remove('fade-in'), 300);
-      }, 300);
+      } catch (e) {
+        showError();
+      }
     }
 
-    /* ── INIT ── */
-    loadCurrent();
+    init();
   </script>
 
 </body>

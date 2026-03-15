@@ -494,24 +494,19 @@
       document.getElementById('main-content').appendChild(prog);
     }
 
-    /* ── API CACHE ── */
-    const ayatCache = {};
-
-    async function fetchAyat(surah, ayah) {
-      const key = `${surah}:${ayah}`;
-      if (ayatCache[key]) return ayatCache[key];
+    /* ── FETCH ONE AYAT ── */
+    async function fetchOne(surah, ayah) {
       const url  = `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/editions/quran-uthmani,en.transliteration,fr.hamidullah`;
       const res  = await fetch(url);
       if (!res.ok) throw new Error('API error');
       const json = await res.json();
       const d    = json.data;
-      const result = { arabic: d[0].text, transliteration: d[1].text, translation: d[2].text };
-      ayatCache[key] = result;
-      return result;
+      return { arabic: d[0].text, transliteration: d[1].text, translation: d[2].text };
     }
 
     /* ── STATE ── */
     let currentIndex = 0;
+    let prefetched   = []; /* all due ayat loaded upfront */
 
     function getItem(idx) {
       const item = dueList[idx];
@@ -533,8 +528,8 @@
       document.getElementById('progress-fill').style.width  = ((current / total) * 100) + '%';
     }
 
-    /* ── LOAD AYAT ── */
-    async function loadCurrent() {
+    /* ── DISPLAY CURRENT (from prefetched array — instant) ── */
+    function loadCurrent() {
       /* Reset reveal state */
       const arabicWrap = document.getElementById('arabic-wrap');
       const btnReveal  = document.getElementById('btn-reveal');
@@ -544,25 +539,21 @@
       if (btnReveal)  { btnReveal.style.display = 'block'; btnReveal.style.opacity = '1'; }
       if (evalRow)    evalRow.classList.remove('visible');
 
-      document.getElementById('loading-wrap').style.display = 'flex';
-      document.getElementById('ayat-data').style.display    = 'none';
-
       updateMeta();
 
-      try {
-        const item = getItem(currentIndex);
-        const data = await fetchAyat(item.surah, item.ayah);
-
+      const data = prefetched[currentIndex];
+      if (data) {
         document.getElementById('rev-translit').textContent    = data.transliteration;
         document.getElementById('rev-translation').textContent = data.translation;
         document.getElementById('rev-arabic').textContent      = data.arabic;
-
         document.getElementById('loading-wrap').style.display  = 'none';
         document.getElementById('ayat-data').style.display     = 'flex';
-      } catch (e) {
+      } else {
         document.getElementById('loading-wrap').innerHTML = `
           <p class="error-text">Impossible de charger le verset.<br>Vérifie ta connexion.</p>
         `;
+        document.getElementById('loading-wrap').style.display = 'flex';
+        document.getElementById('ayat-data').style.display    = 'none';
       }
     }
 
@@ -633,13 +624,30 @@
       }, 300);
     }
 
-    /* ── INIT ── */
-    if (dueList.length === 0) {
-      renderEmpty();
-    } else {
+    /* ── INIT — prefetch all due ayat in parallel ── */
+    async function init() {
+      if (dueList.length === 0) {
+        renderEmpty();
+        return;
+      }
       buildReviewUI();
-      loadCurrent();
+      /* Spinner already visible from buildReviewUI */
+      try {
+        prefetched = await Promise.all(
+          dueList.map((_, i) => {
+            const item = getItem(i);
+            return fetchOne(item.surah, item.ayah);
+          })
+        );
+        loadCurrent();
+      } catch (e) {
+        document.getElementById('loading-wrap').innerHTML = `
+          <p class="error-text">Impossible de charger les versets.<br>Vérifie ta connexion.</p>
+        `;
+      }
     }
+
+    init();
   </script>
 
 </body>
