@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyHifz — Session</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500&family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #F5F0E6;
+      color: #163026;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      animation: bodyFadeIn 0.5s ease forwards;
+    }
+
+    @keyframes bodyFadeIn { to { opacity: 1; } }
+
+    /* ── HEADER ── */
+    .header {
+      position: relative;
+      background: linear-gradient(160deg, #0d1f17 0%, #163026 50%, #1e4535 100%);
+      padding: 24px 24px 32px 24px;
+      display: grid;
+      grid-template-columns: 40px 1fr 40px;
+      align-items: center;
+      animation: headerSlideDown 0.5s ease both;
+    }
+
+    @keyframes headerSlideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .header-back {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 20px;
+      color: #FFFFFF;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .header-center {
+      text-align: center;
+    }
+
+    .header-surah {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 18px;
+      color: #FFFFFF;
+      display: block;
+    }
+
+    .header-ayat-range {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 2px;
+      display: block;
+    }
+
+    .header-counter {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: #FFFFFF;
+      text-align: right;
+    }
+
+    /* ── AYAT CARD ── */
+    .ayat-card {
+      margin: 16px;
+      background: #FFFFFF;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(15, 35, 24, 0.15);
+      padding: 40px 32px;
+      animation: cardFadeIn 0.6s ease both;
+    }
+
+    @keyframes cardFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .ayat-card.fade-out {
+      animation: cardFadeOut 0.3s ease forwards;
+    }
+
+    .ayat-card.fade-in {
+      animation: cardFadeIn2 0.3s ease forwards;
+    }
+
+    @keyframes cardFadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to   { opacity: 0; transform: translateY(-10px); }
+    }
+
+    @keyframes cardFadeIn2 {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .ayat-number {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: #B8962E;
+      text-align: center;
+      display: block;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+
+    .ayat-arabic {
+      font-family: 'Amiri', serif;
+      font-weight: 700;
+      font-size: 42px;
+      color: #163026;
+      text-align: center;
+      direction: rtl;
+      line-height: 1.8;
+      display: block;
+    }
+
+    .ayat-divider {
+      border: none;
+      border-top: 1px solid #E2D9CC;
+      margin: 24px 0;
+    }
+
+    .ayat-transliteration {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-style: italic;
+      font-size: 15px;
+      color: #6B6357;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .ayat-translation {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      color: #999999;
+      text-align: center;
+      margin-top: 12px;
+      line-height: 1.6;
+    }
+
+    /* ── LOADING SPINNER ── */
+    .loading-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 180px;
+      gap: 16px;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── ERROR STATE ── */
+    .error-text {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: #B8962E;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* ── AYAT CARD FLEX FILL ── */
+    .ayat-card {
+      flex: 1;
+    }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap {
+      margin: 0 16px;
+    }
+
+    .progress-track {
+      background: #E2D9CC;
+      height: 4px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: linear-gradient(90deg, #163026, #B8962E);
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 12px;
+      color: #6B6357;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* ── BUTTONS ── */
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin: 16px;
+    }
+
+    .btn-next {
+      width: 100%;
+      background: linear-gradient(135deg, #163026, #2d5a42);
+      color: #FFFFFF;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(15, 35, 24, 0.3);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      text-align: center;
+    }
+
+    .btn-next:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 36px rgba(15, 35, 24, 0.42);
+    }
+
+    /* MOBILE */
+    @media (max-width: 375px) {
+      .ayat-arabic { font-size: 34px; }
+      .ayat-card { padding: 28px 20px; }
+      .btn-next, .btn-replay { font-size: 14px; padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <button class="header-back" onclick="navigateTo('index.html')">←</button>
+    <div class="header-center">
+      <span class="header-surah" id="header-surah">—</span>
+      <span class="header-ayat-range" id="header-range">—</span>
+    </div>
+    <span class="header-counter" id="header-counter">1 / 1</span>
+  </header>
+
+  <!-- AYAT CARD -->
+  <div class="ayat-card" id="ayat-card">
+    <div class="loading-wrap" id="loading-wrap">
+      <svg class="spinner" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="10" stroke="#E2D9CC" stroke-width="2"/>
+        <path d="M12 2a10 10 0 0 1 10 10" stroke="#B8962E" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div id="ayat-content" style="display:none">
+      <span class="ayat-number" id="ayat-number">AYAT 1</span>
+      <span class="ayat-arabic" id="ayat-arabic"></span>
+      <hr class="ayat-divider" />
+      <p class="ayat-transliteration" id="ayat-transliteration"></p>
+      <p class="ayat-translation" id="ayat-translation"></p>
+    </div>
+  </div>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-wrap">
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+    </div>
+    <p class="progress-label" id="progress-label">Ayat 1 sur 1</p>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="btn-row">
+    <button class="btn-next" id="btn-next" onclick="nextAyat()">Suivant →</button>
+  </div>
+
+  <script>
+    /* ── PAGE TRANSITION ── */
+    function navigateTo(url) {
+      document.body.style.transition = 'opacity 0.35s ease';
+      document.body.style.opacity = '0';
+      setTimeout(() => { window.location.href = url; }, 350);
+    }
+
+    /* ── SURAH NAMES ── */
+    const SURAH_NAMES = [
+      null,'Al-Fatiha','Al-Baqara','Al-Imran','An-Nisa','Al-Maida','Al-Anam','Al-Araf',
+      'Al-Anfal','At-Tawba','Yunus','Hud','Yusuf','Ar-Rad','Ibrahim','Al-Hijr','An-Nahl',
+      'Al-Isra','Al-Kahf','Maryam','Ta-Ha','Al-Anbiya','Al-Hajj','Al-Muminun','An-Nur',
+      'Al-Furqan','Ash-Shuara','An-Naml','Al-Qasas','Al-Ankabut','Ar-Rum','Luqman',
+      'As-Sajda','Al-Ahzab','Saba','Fatir','Ya-Sin','As-Saffat','Sad','Az-Zumar','Ghafir',
+      'Fussilat','Ash-Shura','Az-Zukhruf','Ad-Dukhan','Al-Jathiya','Al-Ahqaf','Muhammad',
+      'Al-Fath','Al-Hujurat','Qaf','Adh-Dhariyat','At-Tur','An-Najm','Al-Qamar','Ar-Rahman',
+      'Al-Waqia','Al-Hadid','Al-Mujadila','Al-Hashr','Al-Mumtahina','As-Saf',"Al-Jumu'a",
+      'Al-Munafiqun','At-Taghabun','At-Talaq','At-Tahrim','Al-Mulk','Al-Qalam','Al-Haqqa',
+      "Al-Ma'arij",'Nuh','Al-Jinn','Al-Muzzammil','Al-Muddaththir','Al-Qiyama','Al-Insan',
+      'Al-Mursalat',"An-Naba'",'An-Naziat','Abasa','At-Takwir','Al-Infitar','Al-Mutaffifin',
+      'Al-Inshiqaq','Al-Buruj','At-Tariq',"Al-A'la",'Al-Ghashiya','Al-Fajr','Al-Balad',
+      'Ash-Shams','Al-Layl','Ad-Duha','Ash-Sharh','At-Tin','Al-Alaq','Al-Qadr','Al-Bayyina',
+      'Az-Zalzala','Al-Adiyat',"Al-Qari'a",'At-Takathur','Al-Asr','Al-Humaza','Al-Fil',
+      'Quraysh',"Al-Ma'un",'Al-Kawthar','Al-Kafirun','An-Nasr','Al-Masad','Al-Ikhlas',
+      'Al-Falaq','An-Nas',
+    ];
+
+    /* ── LOAD LOCALSTORAGE ── */
+    const userTime     = localStorage.getItem('userTime')     || '20';
+    const currentSurah = parseInt(localStorage.getItem('currentSurah') || '78', 10);
+    const currentAyah  = parseInt(localStorage.getItem('currentAyah')  || '0',  10);
+
+    const ayatPerDayMap = { '10': 1, '20': 2, '30': 3, '45': 4 };
+    const ayatCount     = ayatPerDayMap[userTime] || 2;
+
+    /* ── BUILD AYAT LIST ── */
+    const startAyah = currentAyah + 1;
+    const ayatList  = [];
+    for (let i = 0; i < ayatCount; i++) {
+      ayatList.push(startAyah + i);
+    }
+
+    const surahName = SURAH_NAMES[currentSurah] || "An-Naba'";
+    const endAyah   = startAyah + ayatCount - 1;
+
+    /* ── POPULATE HEADER ── */
+    document.getElementById('header-surah').textContent = surahName;
+    document.getElementById('header-range').textContent = `Ayat ${startAyah} à ${endAyah}`;
+
+    /* ── STATE ── */
+    let currentIndex = 0;
+    let ayatCache    = {};
+
+    /* ── FETCH AYAT FROM API ── */
+    async function fetchAyat(surah, ayah) {
+      const key = `${surah}:${ayah}`;
+      if (ayatCache[key]) return ayatCache[key];
+
+      const url = `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/editions/quran-uthmani,en.transliteration,fr.hamidullah`;
+      const res  = await fetch(url);
+      if (!res.ok) throw new Error('API error');
+      const json = await res.json();
+      const data = json.data;
+      const result = {
+        arabic:          data[0].text,
+        transliteration: data[1].text,
+        translation:     data[2].text,
+      };
+      ayatCache[key] = result;
+      return result;
+    }
+
+    /* ── SHOW LOADING ── */
+    function showLoading() {
+      document.getElementById('loading-wrap').style.display  = 'flex';
+      document.getElementById('ayat-content').style.display  = 'none';
+    }
+
+    /* ── SHOW AYAT DATA ── */
+    function showAyatData(data, ayahNum) {
+      document.getElementById('ayat-number').textContent         = `AYAT ${ayahNum}`;
+      document.getElementById('ayat-arabic').textContent         = data.arabic;
+      document.getElementById('ayat-transliteration').textContent = data.transliteration;
+      document.getElementById('ayat-translation').textContent    = data.translation;
+      document.getElementById('loading-wrap').style.display      = 'none';
+      document.getElementById('ayat-content').style.display      = 'block';
+    }
+
+    /* ── SHOW ERROR ── */
+    function showError() {
+      document.getElementById('loading-wrap').innerHTML = `
+        <p class="error-text">Impossible de charger le verset.<br>Vérifie ta connexion.</p>
+      `;
+      document.getElementById('loading-wrap').style.display = 'flex';
+      document.getElementById('ayat-content').style.display = 'none';
+    }
+
+    /* ── UPDATE PROGRESS BAR & COUNTER ── */
+    function updateProgress() {
+      const total   = ayatList.length;
+      const current = currentIndex + 1;
+      const pct     = (current / total) * 100;
+
+      document.getElementById('progress-fill').style.width   = pct + '%';
+      document.getElementById('progress-label').textContent  = `Ayat ${current} sur ${total}`;
+      document.getElementById('header-counter').textContent  = `${current} / ${total}`;
+
+      const btnNext = document.getElementById('btn-next');
+      if (currentIndex === total - 1) {
+        btnNext.textContent = 'Terminer la mémorisation ✓';
+      } else {
+        btnNext.textContent = 'Suivant →';
+      }
+    }
+
+    /* ── LOAD CURRENT AYAT ── */
+    async function loadCurrent() {
+      showLoading();
+      updateProgress();
+      try {
+        const ayahNum = ayatList[currentIndex];
+        const data    = await fetchAyat(currentSurah, ayahNum);
+        showAyatData(data, ayahNum);
+      } catch (e) {
+        showError();
+      }
+    }
+
+    /* ── NEXT AYAT ── */
+    function nextAyat() {
+      const total = ayatList.length;
+      if (currentIndex === total - 1) {
+        navigateTo('revision.html');
+        return;
+      }
+      const card = document.getElementById('ayat-card');
+      card.classList.add('fade-out');
+      setTimeout(() => {
+        card.classList.remove('fade-out');
+        currentIndex++;
+        loadCurrent();
+        card.classList.add('fade-in');
+        setTimeout(() => card.classList.remove('fade-in'), 300);
+      }, 300);
+    }
+
+    /* ── REPLAY (re-render current) ── */
+    function replayAyat() {
+      const card = document.getElementById('ayat-card');
+      card.classList.add('fade-out');
+      setTimeout(() => {
+        card.classList.remove('fade-out');
+        loadCurrent();
+        card.classList.add('fade-in');
+        setTimeout(() => card.classList.remove('fade-in'), 300);
+      }, 300);
+    }
+
+    /* ── INIT ── */
+    loadCurrent();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyHifz — Connexion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500&family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #F5F0E6;
+      color: #163026;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      animation: bodyFadeIn 0.5s ease forwards;
+    }
+
+    @keyframes bodyFadeIn { to { opacity: 1; } }
+
+    /* ── CALLIGRAPHIE FOND ── */
+    .bg-calligraphy {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Amiri', serif;
+      font-size: 320px;
+      color: #163026;
+      opacity: 0.04;
+      pointer-events: none;
+      user-select: none;
+      line-height: 1;
+      white-space: nowrap;
+      z-index: 0;
+    }
+
+    /* ── WRAPPER ── */
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 420px;
+      margin: auto;
+      padding: 40px 24px;
+    }
+
+    /* ── LOGO ── */
+    .logo {
+      font-family: 'Amiri', serif;
+      font-weight: 700;
+      font-size: 26px;
+      color: #163026;
+      text-align: center;
+      display: block;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeIn 0.4s ease 0.1s forwards;
+    }
+
+    /* ── TITRE ── */
+    .main-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 36px;
+      color: #163026;
+      text-align: center;
+      line-height: 1.2;
+      opacity: 0;
+      animation: fadeIn 0.4s ease 0.2s forwards;
+    }
+
+    .main-sub {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 16px;
+      color: #6B6357;
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 40px;
+      line-height: 1.6;
+      opacity: 0;
+      animation: fadeIn 0.4s ease 0.3s forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── FORMULAIRE ── */
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      opacity: 0;
+      animation: formFadeUp 0.5s ease 0.4s forwards;
+    }
+
+    @keyframes formFadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .field-label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 13px;
+      color: #163026;
+    }
+
+    .field-forgot {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 12px;
+      color: #6B6357;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .field-input {
+      background: #FFFFFF;
+      border: 1.5px solid #E2D9CC;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 16px;
+      color: #163026;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .field-input::placeholder { color: #C8BFB2; }
+
+    .field-input:focus {
+      border-color: #163026;
+      box-shadow: 0 0 0 3px rgba(22, 48, 38, 0.08);
+    }
+
+    .field-input.error {
+      border-color: #C0392B;
+      box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.08);
+    }
+
+    .field-error {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 12px;
+      color: #C0392B;
+      display: none;
+    }
+
+    .field-error.visible { display: block; }
+
+    /* ── PASSWORD WRAPPER ── */
+    .pw-wrap {
+      position: relative;
+    }
+
+    .pw-wrap .field-input {
+      padding-right: 48px;
+    }
+
+    .pw-toggle {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      color: #C8BFB2;
+      display: flex;
+      align-items: center;
+      transition: color 0.2s ease;
+    }
+
+    .pw-toggle:hover { color: #163026; }
+    .pw-toggle svg { width: 18px; height: 18px; }
+
+    /* ── BOUTON PRINCIPAL ── */
+    .btn-submit {
+      width: 100%;
+      margin-top: 32px;
+      background: linear-gradient(135deg, #163026, #2d5a42);
+      color: #FFFFFF;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 17px;
+      padding: 16px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 32px rgba(15, 35, 24, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      opacity: 0;
+      animation: fadeIn 0.4s ease 0.5s forwards;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 40px rgba(15, 35, 24, 0.38);
+    }
+
+    /* ── LIEN INSCRIPTION ── */
+    .register-link {
+      margin-top: 24px;
+      text-align: center;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      color: #6B6357;
+      opacity: 0;
+      animation: fadeIn 0.4s ease 0.6s forwards;
+    }
+
+    .register-link a {
+      color: #163026;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* MOBILE */
+    @media (max-width: 375px) {
+      .main-title { font-size: 30px; }
+      .main-sub   { font-size: 15px; }
+      .wrapper    { padding: 32px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CALLIGRAPHIE FOND -->
+  <div class="bg-calligraphy" aria-hidden="true">الله</div>
+
+  <!-- CONTENU PRINCIPAL -->
+  <div class="wrapper">
+
+    <!-- LOGO -->
+    <span class="logo">MyHifz</span>
+
+    <!-- TITRE -->
+    <h1 class="main-title">Bon retour.</h1>
+    <p class="main-sub">Continue là où tu t'es arrêté.</p>
+
+    <!-- FORMULAIRE -->
+    <form class="form" id="login-form" onsubmit="handleSubmit(event)" novalidate>
+
+      <!-- EMAIL -->
+      <div class="field">
+        <label class="field-label" for="input-email">Email</label>
+        <input
+          class="field-input"
+          id="input-email"
+          type="email"
+          placeholder="ton@email.com"
+          autocomplete="email"
+        />
+        <span class="field-error" id="err-email">Entre une adresse email valide.</span>
+      </div>
+
+      <!-- MOT DE PASSE -->
+      <div class="field">
+        <div class="field-label-row">
+          <label class="field-label" for="input-password">Mot de passe</label>
+          <button type="button" class="field-forgot">Mot de passe oublié ?</button>
+        </div>
+        <div class="pw-wrap">
+          <input
+            class="field-input"
+            id="input-password"
+            type="password"
+            placeholder="Ton mot de passe"
+            autocomplete="current-password"
+          />
+          <button type="button" class="pw-toggle" onclick="togglePassword()" aria-label="Afficher le mot de passe">
+            <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+        <span class="field-error" id="err-password">Entre ton mot de passe.</span>
+      </div>
+
+      <!-- BOUTON -->
+      <button type="submit" class="btn-submit">Se connecter →</button>
+
+    </form>
+
+    <!-- LIEN INSCRIPTION -->
+    <p class="register-link">
+      Pas encore de compte ? <a onclick="navigateTo('register.html')">Créer un compte</a>
+    </p>
+
+  </div>
+
+  <script>
+    /* ── PAGE TRANSITION ── */
+    function navigateTo(url) {
+      document.body.style.transition = 'opacity 0.35s ease';
+      document.body.style.opacity = '0';
+      setTimeout(() => { window.location.href = url; }, 350);
+    }
+
+    /* ── TOGGLE MOT DE PASSE ── */
+    function togglePassword() {
+      const input   = document.getElementById('input-password');
+      const icon    = document.getElementById('eye-icon');
+      const showing = input.type === 'text';
+      input.type = showing ? 'password' : 'text';
+      if (showing) {
+        icon.innerHTML = `
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        `;
+      } else {
+        icon.innerHTML = `
+          <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
+          <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>
+          <line x1="1" y1="1" x2="23" y2="23"/>
+        `;
+      }
+    }
+
+    /* ── VALIDATION & SUBMIT ── */
+    function setFieldError(inputId, errorId, show) {
+      const input = document.getElementById(inputId);
+      const err   = document.getElementById(errorId);
+      if (show) {
+        input.classList.add('error');
+        err.classList.add('visible');
+      } else {
+        input.classList.remove('error');
+        err.classList.remove('visible');
+      }
+    }
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+
+      const email    = document.getElementById('input-email').value.trim();
+      const password = document.getElementById('input-password').value;
+      let valid = true;
+
+      if (!email || !isValidEmail(email)) {
+        setFieldError('input-email', 'err-email', true);
+        valid = false;
+      } else {
+        setFieldError('input-email', 'err-email', false);
+      }
+
+      if (!password) {
+        setFieldError('input-password', 'err-password', true);
+        valid = false;
+      } else {
+        setFieldError('input-password', 'err-password', false);
+      }
+
+      if (!valid) return;
+
+      navigateTo('index.html');
+    }
+
+    /* Clear errors on input */
+    ['input-email', 'input-password'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        document.getElementById(id).classList.remove('error');
+        const errId = id.replace('input-', 'err-');
+        const errEl = document.getElementById(errId);
+        if (errEl) errEl.classList.remove('visible');
+      });
+    });
+  </script>
+
+</body>
+</html>

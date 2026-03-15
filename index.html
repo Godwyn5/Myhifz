@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyHifz — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@400;500&family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #F5F0E6;
+      color: #163026;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      opacity: 0;
+      animation: bodyFadeIn 0.5s ease forwards;
+      padding-bottom: 80px;
+    }
+
+    @keyframes bodyFadeIn { to { opacity: 1; } }
+
+    /* ── HEADER HERO ── */
+    .header {
+      position: relative;
+      background: linear-gradient(160deg, #0d1f17 0%, #163026 50%, #1e4535 100%);
+      padding: 32px 24px 64px 24px;
+      overflow: hidden;
+      animation: headerSlideDown 0.5s ease both;
+    }
+
+    @keyframes headerSlideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .header-calligraphy {
+      position: absolute;
+      right: -10px;
+      bottom: -10px;
+      font-family: 'Amiri', serif;
+      font-size: 180px;
+      color: #FFFFFF;
+      opacity: 0.05;
+      pointer-events: none;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .header-greeting {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 13px;
+      color: #B8962E;
+      letter-spacing: 1px;
+    }
+
+    .header-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 34px;
+      color: #FFFFFF;
+      display: block;
+      margin-top: 2px;
+      line-height: 1.2;
+    }
+
+    .header-date {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 4px;
+    }
+
+    .header-streak {
+      position: absolute;
+      top: 32px;
+      right: 24px;
+      text-align: center;
+    }
+
+    .streak-fire {
+      font-size: 28px;
+      line-height: 1;
+      display: block;
+      animation: flamePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes flamePulse {
+      0%, 100% { transform: scale(1);    opacity: 1; }
+      50%       { transform: scale(1.15); opacity: 0.85; }
+    }
+
+    .streak-number {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 32px;
+      color: #FFFFFF;
+      display: block;
+      line-height: 1;
+    }
+
+    .streak-label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+      display: block;
+    }
+
+    /* ── SESSION CARD (overlaps header) ── */
+    .session-card {
+      position: relative;
+      margin: -24px 16px 0 16px;
+      background: #FFFFFF;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(15, 35, 24, 0.15);
+      padding: 28px;
+      animation: cardFadeUp 0.6s ease 0.2s both;
+    }
+
+    @keyframes cardFadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .session-badge {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: #B8962E;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .session-block-label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      color: #B8962E;
+      text-transform: uppercase;
+    }
+
+    .session-surah-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 20px;
+      color: #163026;
+      margin-top: 6px;
+      display: block;
+    }
+
+    .session-ayat-range {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      color: #6B6357;
+      margin-top: 2px;
+    }
+
+    .session-tag {
+      display: inline-block;
+      margin-top: 10px;
+      background: rgba(22, 48, 38, 0.08);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 12px;
+      color: #163026;
+    }
+
+    .session-divider {
+      border: none;
+      border-top: 1px dashed #E2D9CC;
+      margin: 20px 0;
+    }
+
+    .review-empty-badge {
+      display: inline-block;
+      margin-top: 10px;
+      background: rgba(184, 150, 46, 0.1);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 13px;
+      color: #B8962E;
+    }
+
+    .review-item {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      color: #6B6357;
+      margin-top: 8px;
+    }
+
+    /* ── MAIN CTA BUTTON ── */
+    .btn-main {
+      display: block;
+      width: 100%;
+      margin-top: 24px;
+      background: linear-gradient(135deg, #163026, #2d5a42);
+      color: #FFFFFF;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(15, 35, 24, 0.3);
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 36px rgba(15, 35, 24, 0.42);
+    }
+
+    .btn-done-wrap {
+      margin-top: 24px;
+      text-align: center;
+    }
+
+    .btn-done {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1.5px solid #E2D9CC;
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 15px;
+      color: #163026;
+      text-align: center;
+    }
+
+    .btn-done-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 13px;
+      font-style: italic;
+      color: #6B6357;
+      margin-top: 10px;
+    }
+
+    /* ── CITATION ── */
+    .citation-wrap {
+      margin: 24px 16px;
+      padding: 20px 24px;
+      background: rgba(22, 48, 38, 0.04);
+      border-radius: 16px;
+      border-left: 3px solid #B8962E;
+      animation: citationFade 0.6s ease 0.4s both;
+    }
+
+    @keyframes citationFade {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .citation-text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 15px;
+      color: #163026;
+      line-height: 1.7;
+    }
+
+    .citation-attr {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 12px;
+      color: #6B6357;
+      margin-top: 10px;
+    }
+
+    /* ── OBJECTIVE CARD ── */
+    .obj-card {
+      margin: 0 16px 24px 16px;
+      background: #FFFFFF;
+      border-radius: 20px;
+      box-shadow: 0 8px 48px rgba(15, 35, 24, 0.08);
+      padding: 24px 28px;
+    }
+
+    .obj-label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: #B8962E;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .obj-bar-track {
+      background: #E2D9CC;
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .obj-bar-fill {
+      background: linear-gradient(90deg, #163026, #B8962E);
+      height: 100%;
+      border-radius: 3px;
+      width: 0%;
+      transition: width 1.2s ease;
+    }
+
+    .obj-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 13px;
+      color: #6B6357;
+      margin-top: 10px;
+    }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(245, 240, 230, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(22, 48, 38, 0.08);
+      padding: 12px 0 20px 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .nav-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 0 32px;
+      position: relative;
+    }
+
+    .nav-tab svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .nav-tab-label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 11px;
+    }
+
+    .nav-tab.active svg,
+    .nav-tab.active .nav-tab-label { color: #163026; }
+
+    .nav-tab.inactive svg,
+    .nav-tab.inactive .nav-tab-label { color: #C8BFB2; }
+
+    .nav-tab.active::after {
+      content: '';
+      display: block;
+      width: 4px;
+      height: 4px;
+      background: #B8962E;
+      border-radius: 50%;
+      position: absolute;
+      bottom: -10px;
+    }
+
+    /* ── SECTION TOGGLE ── */
+    .page-section { display: none; }
+
+    .page-section.active {
+      display: block;
+      animation: sectionFade 0.3s ease forwards;
+    }
+
+    @keyframes sectionFade {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── PROGRESSION PAGE ── */
+    .prog-header {
+      position: relative;
+      background: linear-gradient(160deg, #163026 0%, #1e4535 60%, #2d5a42 100%);
+      padding: 32px 24px 48px 24px;
+      overflow: hidden;
+    }
+
+    .prog-header-calligraphy {
+      position: absolute;
+      right: -20px;
+      bottom: -20px;
+      font-family: 'Amiri', serif;
+      font-size: 160px;
+      color: #FFFFFF;
+      opacity: 0.04;
+      pointer-events: none;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .prog-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 28px;
+      color: #FFFFFF;
+    }
+
+    .card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      box-shadow: 0 8px 48px rgba(15, 35, 24, 0.08);
+      padding: 28px;
+      margin: 24px 16px 0 16px;
+    }
+
+    .card-label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: #B8962E;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    /* STATS GRID */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr 1px 1fr;
+      align-items: center;
+    }
+
+    .stat-divider {
+      background: #E2D9CC;
+      width: 1px;
+      height: 60px;
+      align-self: center;
+    }
+
+    .stat-col { text-align: center; padding: 0 8px; }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 48px;
+      color: #163026;
+      line-height: 1;
+      display: block;
+    }
+
+    .stat-label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: #B8962E;
+      text-transform: uppercase;
+      display: block;
+      margin-top: 6px;
+    }
+
+    .stat-sublabel {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 12px;
+      color: #6B6357;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* PROGRESS BAR */
+    .prog-bar-meta {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: #163026;
+      margin-bottom: 10px;
+    }
+
+    .prog-bar-track {
+      background: #E2D9CC;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .prog-bar-fill {
+      background: linear-gradient(90deg, #163026, #B8962E);
+      height: 100%;
+      border-radius: 4px;
+      transition: width 1.2s ease;
+      width: 0%;
+    }
+
+    /* CALENDAR */
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .cal-day-header {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 10px;
+      color: #6B6357;
+      text-align: center;
+      padding-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .cal-day {
+      width: 100%;
+      max-width: 36px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .cal-day.done  { background: #163026; color: #FFFFFF; }
+    .cal-day.today { background: transparent; border: 2px solid #B8962E; color: #163026; }
+    .cal-day.empty { background: #E2D9CC; color: #6B6357; }
+    .cal-day.pad   { background: transparent; }
+
+    .prog-encourage {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 16px;
+      color: #6B6357;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* MOBILE */
+    @media (max-width: 375px) {
+      .header { padding: 24px 20px 44px 20px; }
+      .header-name { font-size: 26px; }
+      .streak-number { font-size: 26px; }
+      .session-card { margin: -20px 12px 0 12px; padding: 20px; }
+      .stat-number { font-size: 36px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ TODAY SECTION ══ -->
+  <div class="page-section active" id="section-today">
+
+    <!-- HEADER HERO -->
+    <header class="header">
+      <div class="header-calligraphy" aria-hidden="true">الله</div>
+      <div class="header-streak">
+        <span class="streak-fire">🔥</span>
+        <span class="streak-number" id="streak-number">0</span>
+        <span class="streak-label">jours</span>
+      </div>
+      <span class="header-greeting">Assalamu Alaykoum,</span>
+      <span class="header-name" id="header-name">—</span>
+      <p class="header-date" id="header-date"></p>
+    </header>
+
+    <!-- SESSION CARD -->
+    <div class="session-card">
+      <span class="session-badge">Aujourd'hui</span>
+
+      <!-- MÉMORISATION -->
+      <span class="session-block-label">Nouvelle mémorisation</span>
+      <span class="session-surah-name" id="mem-surah-name">—</span>
+      <p class="session-ayat-range" id="mem-ayat-range">—</p>
+      <span class="session-tag" id="mem-tag">—</span>
+
+      <hr class="session-divider" />
+
+      <!-- RÉVISION -->
+      <span class="session-block-label">Révision</span>
+      <div id="review-list-el"></div>
+
+      <!-- BOUTON -->
+      <div id="btn-wrap">
+        <button class="btn-main" onclick="navigateTo('session.html')">Commencer la session →</button>
+      </div>
+    </div>
+
+    <!-- CITATION -->
+    <div class="citation-wrap">
+      <p class="citation-text" id="citation-text"></p>
+      <p class="citation-attr" id="citation-attr"></p>
+    </div>
+
+    <!-- OBJECTIVE CARD -->
+    <div class="obj-card">
+      <span class="obj-label">Ton objectif</span>
+      <div class="obj-bar-track">
+        <div class="obj-bar-fill" id="obj-bar-fill"></div>
+      </div>
+      <p class="obj-sub" id="obj-sub">0 / 6236 ayat</p>
+    </div>
+
+  </div>
+
+  <!-- ══ PROGRESSION SECTION ══ -->
+  <div class="page-section" id="section-progress">
+
+    <div class="prog-header">
+      <div class="prog-header-calligraphy" aria-hidden="true">الله</div>
+      <p class="prog-title">Ta progression</p>
+    </div>
+
+    <!-- STATS CARD -->
+    <div class="card" style="margin-top: -24px; position: relative; z-index: 1;">
+      <div class="stats-grid">
+        <div class="stat-col">
+          <span class="stat-number" id="prog-ayat">0</span>
+          <span class="stat-label">Ayat</span>
+          <span class="stat-sublabel">mémorisés</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-col">
+          <span class="stat-number" id="prog-streak">0</span>
+          <span class="stat-label">Jours</span>
+          <span class="stat-sublabel">de suite</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-col">
+          <span class="stat-number" id="prog-month">0</span>
+          <span class="stat-label">Actif</span>
+          <span class="stat-sublabel">ce mois</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROGRESS BAR CARD -->
+    <div class="card">
+      <span class="card-label">Vers le Coran complet</span>
+      <div class="prog-bar-meta">
+        <span id="prog-bar-label">0 / 6236 ayat</span>
+        <span id="prog-bar-pct">0%</span>
+      </div>
+      <div class="prog-bar-track">
+        <div class="prog-bar-fill" id="prog-bar-fill"></div>
+      </div>
+    </div>
+
+    <!-- CALENDAR CARD -->
+    <div class="card">
+      <span class="card-label">Ce mois</span>
+      <div class="cal-grid" id="cal-headers"></div>
+      <div class="cal-grid" style="margin-top: 8px;" id="cal-grid"></div>
+      <p class="prog-encourage" style="margin-top: 24px;">Continue à ce rythme — chaque ayat compte.</p>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <div class="nav-tab active" id="tab-today" onclick="switchTab('today')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
+        <path d="M9 21V12h6v9"/>
+      </svg>
+      <span class="nav-tab-label">Aujourd'hui</span>
+    </div>
+    <div class="nav-tab inactive" id="tab-prog" onclick="switchTab('progress')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"/>
+        <line x1="12" y1="20" x2="12" y2="4"/>
+        <line x1="6"  y1="20" x2="6"  y2="14"/>
+      </svg>
+      <span class="nav-tab-label">Progression</span>
+    </div>
+  </nav>
+
+  <script>
+    /* ── PAGE TRANSITION ── */
+    function navigateTo(url) {
+      document.body.style.transition = 'opacity 0.35s ease';
+      document.body.style.opacity = '0';
+      setTimeout(() => { window.location.href = url; }, 350);
+    }
+
+    /* ── CITATIONS (indexed by day of week 0–6) ── */
+    const CITATIONS = [
+      { text: '« La meilleure des adorations est la récitation du Coran. »',                       attr: '— Shu\'ab al-Iman' },
+      { text: '« Celui qui récite le Coran en le maîtrisant sera avec les anges nobles et bons. »', attr: '— Sahih Muslim' },
+      { text: '« Apprenez le Coran et récitez-le, car il intercédera pour ceux qui le récitent. »', attr: '— Sunan Ibn Majah' },
+      { text: '« Le meilleur d\u2019entre vous est celui qui apprend le Coran et l\u2019enseigne. »', attr: '— Sahih al-Bukhari' },
+      { text: '« Orne le Coran de ta voix, car la belle voix embellit le Coran. »',                attr: '— Sunan Abi Dawud' },
+      { text: '« Lisez le Coran, car il viendra le Jour du Jugement comme intercesseur. »',        attr: '— Sahih Muslim' },
+      { text: '« Gardez vivant le lien avec le Coran, sinon il disparaît plus vite que les chameaux. »', attr: '— Sahih al-Bukhari' },
+    ];
+
+    /* ── SURAH DATA ── */
+    const SURAHS = [
+      null,
+      {n:'Al-Fatiha',a:7},{n:'Al-Baqara',a:286},{n:'Al-Imran',a:200},{n:'An-Nisa',a:176},
+      {n:'Al-Maida',a:120},{n:'Al-Anam',a:165},{n:'Al-Araf',a:206},{n:'Al-Anfal',a:75},
+      {n:'At-Tawba',a:129},{n:'Yunus',a:109},{n:'Hud',a:123},{n:'Yusuf',a:111},
+      {n:'Ar-Rad',a:43},{n:'Ibrahim',a:52},{n:'Al-Hijr',a:99},{n:'An-Nahl',a:128},
+      {n:'Al-Isra',a:111},{n:'Al-Kahf',a:110},{n:'Maryam',a:98},{n:'Ta-Ha',a:135},
+      {n:'Al-Anbiya',a:112},{n:'Al-Hajj',a:78},{n:'Al-Muminun',a:118},{n:'An-Nur',a:64},
+      {n:'Al-Furqan',a:77},{n:'Ash-Shuara',a:227},{n:'An-Naml',a:93},{n:'Al-Qasas',a:88},
+      {n:'Al-Ankabut',a:69},{n:'Ar-Rum',a:60},{n:'Luqman',a:34},{n:'As-Sajda',a:30},
+      {n:'Al-Ahzab',a:73},{n:'Saba',a:54},{n:'Fatir',a:45},{n:'Ya-Sin',a:83},
+      {n:'As-Saffat',a:182},{n:'Sad',a:88},{n:'Az-Zumar',a:75},{n:'Ghafir',a:85},
+      {n:'Fussilat',a:54},{n:'Ash-Shura',a:53},{n:'Az-Zukhruf',a:89},{n:'Ad-Dukhan',a:59},
+      {n:'Al-Jathiya',a:37},{n:'Al-Ahqaf',a:35},{n:'Muhammad',a:38},{n:'Al-Fath',a:29},
+      {n:'Al-Hujurat',a:18},{n:'Qaf',a:45},{n:'Adh-Dhariyat',a:60},{n:'At-Tur',a:49},
+      {n:'An-Najm',a:62},{n:'Al-Qamar',a:55},{n:'Ar-Rahman',a:78},{n:'Al-Waqia',a:96},
+      {n:'Al-Hadid',a:29},{n:'Al-Mujadila',a:22},{n:'Al-Hashr',a:24},{n:'Al-Mumtahina',a:13},
+      {n:'As-Saf',a:14},{n:"Al-Jumu'a",a:11},{n:'Al-Munafiqun',a:11},{n:'At-Taghabun',a:18},
+      {n:'At-Talaq',a:12},{n:'At-Tahrim',a:12},{n:'Al-Mulk',a:30},{n:'Al-Qalam',a:52},
+      {n:'Al-Haqqa',a:52},{n:"Al-Ma'arij",a:44},{n:'Nuh',a:28},{n:'Al-Jinn',a:28},
+      {n:'Al-Muzzammil',a:20},{n:'Al-Muddaththir',a:56},{n:'Al-Qiyama',a:40},{n:'Al-Insan',a:31},
+      {n:'Al-Mursalat',a:50},{n:"An-Naba'",a:40},{n:"An-Nazi'at",a:46},{n:'Abasa',a:42},
+      {n:'At-Takwir',a:29},{n:'Al-Infitar',a:19},{n:'Al-Mutaffifin',a:36},{n:'Al-Inshiqaq',a:25},
+      {n:'Al-Buruj',a:22},{n:'At-Tariq',a:17},{n:"Al-A'la",a:19},{n:'Al-Ghashiya',a:26},
+      {n:'Al-Fajr',a:30},{n:'Al-Balad',a:20},{n:'Ash-Shams',a:15},{n:'Al-Layl',a:21},
+      {n:'Ad-Duha',a:11},{n:'Ash-Sharh',a:8},{n:'At-Tin',a:8},{n:'Al-Alaq',a:19},
+      {n:'Al-Qadr',a:5},{n:'Al-Bayyina',a:8},{n:'Az-Zalzala',a:8},{n:'Al-Adiyat',a:11},
+      {n:"Al-Qari'a",a:11},{n:'At-Takathur',a:8},{n:'Al-Asr',a:3},{n:'Al-Humaza',a:9},
+      {n:'Al-Fil',a:5},{n:'Quraysh',a:4},{n:"Al-Ma'un",a:7},{n:'Al-Kawthar',a:3},
+      {n:'Al-Kafirun',a:6},{n:'An-Nasr',a:3},{n:'Al-Masad',a:5},{n:'Al-Ikhlas',a:4},
+      {n:'Al-Falaq',a:5},{n:'An-Nas',a:6},
+    ];
+
+    /* ── DATE HELPERS ── */
+    function formatDateFr(d) {
+      const days   = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+      const months = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+      return `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    }
+    function toDateStr(d) { return d.toISOString().slice(0, 10); }
+
+    /* ── LOAD LOCALSTORAGE ── */
+    const userName        = localStorage.getItem('userName')        || 'Youssef';
+    const userTime        = localStorage.getItem('userTime')        || '20';
+    let   streak          = parseInt(localStorage.getItem('streak') || '0', 10);
+    const lastSessionDate = localStorage.getItem('lastSessionDate') || '';
+    const currentSurah    = parseInt(localStorage.getItem('currentSurah')    || '78', 10);
+    const currentAyah     = parseInt(localStorage.getItem('currentAyah')     || '0',  10);
+    const totalMemorized  = parseInt(localStorage.getItem('totalMemorized')  || '0',  10);
+    const sessionDates    = JSON.parse(localStorage.getItem('sessionDates')  || '[]');
+    const reviewList      = JSON.parse(localStorage.getItem('reviewList')    || '[]');
+    const ayatPerDayMap   = { '10': 1, '20': 2, '30': 3, '45': 4 };
+    const ayatPerDay      = ayatPerDayMap[userTime] || 2;
+
+    /* ── STREAK CHECK ── */
+    const today     = new Date();
+    const todayStr  = toDateStr(today);
+    const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
+    const yesterStr = toDateStr(yesterday);
+    const sessionDoneToday = lastSessionDate === todayStr;
+
+    if (lastSessionDate && lastSessionDate !== todayStr && lastSessionDate !== yesterStr) {
+      streak = 0;
+      localStorage.setItem('streak', '0');
+    }
+
+    /* ── COMPUTE NEXT AYAT ── */
+    let memSurah = currentSurah;
+    let memStart = currentAyah + 1;
+    let memEnd   = currentAyah + ayatPerDay;
+
+    if (SURAHS[memSurah] && memStart > SURAHS[memSurah].a) {
+      memSurah++;
+      memStart = 1;
+      memEnd   = ayatPerDay;
+    }
+
+    const surahData  = SURAHS[memSurah] || { n: "An-Naba'", a: 40 };
+    memEnd = Math.min(memEnd, surahData.a);
+
+    /* ── POPULATE HEADER ── */
+    document.getElementById('header-name').textContent = userName || 'toi';
+    document.getElementById('header-date').textContent = formatDateFr(today);
+    document.getElementById('streak-number').textContent = streak;
+
+    /* ── POPULATE SESSION CARD ── */
+    document.getElementById('mem-surah-name').textContent = surahData.n;
+    document.getElementById('mem-ayat-range').textContent = `Ayat ${memStart} à ${memEnd}`;
+    document.getElementById('mem-tag').textContent = `${memEnd - memStart + 1} ayat · ${userTime} min`;
+
+    const reviewEl = document.getElementById('review-list-el');
+    if (reviewList.length === 0) {
+      reviewEl.innerHTML = '<span class="review-empty-badge">Aucune révision 🎉</span>';
+    } else {
+      reviewList.forEach(item => {
+        const p = document.createElement('p');
+        p.className = 'review-item';
+        p.textContent = item;
+        reviewEl.appendChild(p);
+      });
+    }
+
+    /* ── SESSION DONE STATE ── */
+    if (sessionDoneToday) {
+      document.getElementById('btn-wrap').innerHTML = `
+        <div class="btn-done-wrap">
+          <div class="btn-done">✓ Session complétée</div>
+          <p class="btn-done-sub">Reviens demain pour continuer ton Hifz.</p>
+        </div>
+      `;
+    }
+
+    /* ── CITATION DU JOUR ── */
+    const cit = CITATIONS[today.getDay()];
+    document.getElementById('citation-text').textContent = cit.text;
+    document.getElementById('citation-attr').textContent = cit.attr;
+
+    /* ── OBJECTIVE BAR (today page) ── */
+    const objPct = totalMemorized > 0 ? +((totalMemorized / 6236) * 100).toFixed(4) : 0;
+    document.getElementById('obj-sub').textContent = `${totalMemorized} / 6236 ayat`;
+    setTimeout(() => {
+      document.getElementById('obj-bar-fill').style.width = objPct + '%';
+    }, 500);
+
+    /* ── PROGRESSION DATA ── */
+    document.getElementById('prog-ayat').textContent   = totalMemorized;
+    document.getElementById('prog-streak').textContent = streak;
+    const thisMonth = sessionDates.filter(d => d.startsWith(todayStr.slice(0, 7))).length;
+    document.getElementById('prog-month').textContent  = thisMonth;
+
+    const pct = totalMemorized > 0 ? +((totalMemorized / 6236) * 100).toFixed(2) : 0;
+    document.getElementById('prog-bar-label').textContent = `${totalMemorized} / 6236 ayat`;
+    document.getElementById('prog-bar-pct').textContent   = pct + '%';
+    setTimeout(() => {
+      document.getElementById('prog-bar-fill').style.width = pct + '%';
+    }, 400);
+
+    /* ── CALENDAR ── */
+    const dayHeaders = ['L','M','M','J','V','S','D'];
+    const calHeaderEl = document.getElementById('cal-headers');
+    dayHeaders.forEach(d => {
+      const div = document.createElement('div');
+      div.className = 'cal-day-header';
+      div.textContent = d;
+      calHeaderEl.appendChild(div);
+    });
+
+    const calGridEl    = document.getElementById('cal-grid');
+    const monthStr     = todayStr.slice(0, 7);
+    const firstDay     = new Date(today.getFullYear(), today.getMonth(), 1);
+    const daysInMonth  = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+    let startDow       = firstDay.getDay(); // 0=Sun
+    startDow = startDow === 0 ? 6 : startDow - 1; // convert to Mon=0
+
+    for (let i = 0; i < startDow; i++) {
+      const pad = document.createElement('div');
+      pad.className = 'cal-day pad';
+      calGridEl.appendChild(pad);
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const ds  = `${monthStr}-${String(d).padStart(2, '0')}`;
+      const div = document.createElement('div');
+      div.textContent = d;
+      if (ds === todayStr)              div.className = 'cal-day today';
+      else if (sessionDates.includes(ds)) div.className = 'cal-day done';
+      else                               div.className = 'cal-day empty';
+      calGridEl.appendChild(div);
+    }
+
+    /* ── TAB SWITCHING ── */
+    function switchTab(tab) {
+      document.getElementById('section-today').classList.toggle('active',    tab === 'today');
+      document.getElementById('section-progress').classList.toggle('active', tab === 'progress');
+      document.getElementById('tab-today').className = 'nav-tab ' + (tab === 'today'    ? 'active' : 'inactive');
+      document.getElementById('tab-prog').className  = 'nav-tab ' + (tab === 'progress' ? 'active' : 'inactive');
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyHifz — Onboarding</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500&family=Amiri:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #F5F0E6;
+      color: #163026;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      opacity: 0;
+      animation: bodyFadeIn 0.5s ease forwards;
+    }
+
+    @keyframes bodyFadeIn {
+      to { opacity: 1; }
+    }
+
+    /* PROGRESS BAR */
+    .progress-bar-wrap {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: #E2D9CC;
+      z-index: 100;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background-color: #B8962E;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* MAIN LAYOUT */
+    .onboarding-wrap {
+      padding-top: 80px;
+      padding-bottom: 60px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* STEP INDICATOR */
+    .step-indicator {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: #6B6357;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    /* QUESTION SCREEN */
+    .question-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      padding: 0 24px;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .question-screen.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-12px); }
+    }
+
+    .question-screen.leaving {
+      animation: fadeOut 0.3s ease forwards;
+    }
+
+    /* QUESTION TITLE */
+    .question-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 36px;
+      color: #163026;
+      text-align: center;
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.25;
+    }
+
+    /* QUESTION SUBTITLE */
+    .question-subtitle {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-style: italic;
+      font-size: 16px;
+      color: #6B6357;
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    /* CHOICE BUTTONS */
+    .choices {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      margin-top: 32px;
+    }
+
+    .choice-btn {
+      display: block;
+      width: 100%;
+      max-width: 400px;
+      min-width: 240px;
+      padding: 16px 24px;
+      margin: 8px auto;
+      background-color: #FFFFFF;
+      border: 1.5px solid #E2D9CC;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      color: #163026;
+      cursor: pointer;
+      text-align: center;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .choice-btn:hover {
+      border-color: #163026;
+    }
+
+    .choice-btn.selected {
+      background-color: #163026;
+      color: #FFFFFF;
+      border-color: #163026;
+    }
+
+    /* CONTINUE BUTTON */
+    .continue-btn {
+      display: none;
+      margin-top: 32px;
+      background-color: #163026;
+      color: #FFFFFF;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 17px;
+      padding: 16px 32px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 24px rgba(15, 35, 24, 0.25);
+      min-width: 280px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .continue-btn.visible {
+      display: inline-block;
+    }
+
+    .continue-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 36px rgba(15, 35, 24, 0.38);
+    }
+
+    /* SOURATES LIST — QUESTION 5 */
+    .sourates-wrap {
+      width: 100%;
+      max-width: 400px;
+      margin: 32px auto 0;
+      background: #FFFFFF;
+      border-radius: 12px;
+      max-height: 320px;
+      overflow-y: scroll;
+      border: 1.5px solid #E2D9CC;
+    }
+
+    .sourate-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      border-bottom: 1px solid #F5F0E6;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .sourate-item:last-child {
+      border-bottom: none;
+    }
+
+    .sourate-item:hover {
+      background-color: #F5F0E6;
+    }
+
+    .sourate-item.checked {
+      background-color: #F0EDE4;
+    }
+
+    .sourate-checkbox {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid #E2D9CC;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .sourate-item.checked .sourate-checkbox {
+      background-color: #163026;
+      border-color: #163026;
+    }
+
+    .sourate-checkbox svg {
+      display: none;
+    }
+
+    .sourate-item.checked .sourate-checkbox svg {
+      display: block;
+    }
+
+    .sourate-num {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: #6B6357;
+      min-width: 24px;
+    }
+
+    .sourate-name {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: #163026;
+      font-weight: 500;
+    }
+
+    .sourates-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .none-btn {
+      padding: 16px 32px;
+      background-color: #FFFFFF;
+      border: 1.5px solid #E2D9CC;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      color: #163026;
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+    }
+
+    .none-btn:hover {
+      border-color: #163026;
+    }
+
+    /* TEXT INPUT — QUESTION 6 */
+    .name-input {
+      display: block;
+      width: 100%;
+      max-width: 320px;
+      margin: 32px auto 0;
+      padding: 16px;
+      background: #FFFFFF;
+      border: 1.5px solid #E2D9CC;
+      border-radius: 8px;
+      font-family: 'Playfair Display', serif;
+      font-weight: 400;
+      font-size: 20px;
+      color: #163026;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .name-input::placeholder {
+      color: #C8BFB2;
+    }
+
+    .name-input:focus {
+      border-color: #163026;
+    }
+
+    /* LOADING SCREEN */
+    #loading-screen {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: #F5F0E6;
+      z-index: 200;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      opacity: 0;
+    }
+
+    #loading-screen.active {
+      display: flex;
+      animation: loadingFadeIn 0.5s ease forwards;
+    }
+
+    @keyframes loadingFadeIn {
+      to { opacity: 1; }
+    }
+
+    .loading-calligraphy {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Amiri', serif;
+      font-size: 200px;
+      color: #163026;
+      opacity: 0.03;
+      pointer-events: none;
+      line-height: 1;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .loading-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .loading-logo {
+      font-family: 'Amiri', serif;
+      font-weight: 700;
+      font-size: 22px;
+      color: #163026;
+      margin-top: 40px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .loading-circle-wrap {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loading-circle-wrap svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: rotate(-90deg);
+    }
+
+    .loading-circle-text {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+    }
+
+    .loading-pct-num {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 42px;
+      color: #163026;
+      line-height: 1;
+    }
+
+    .loading-pct-sign {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 24px;
+      color: #163026;
+      line-height: 1;
+    }
+
+    .loading-phrase {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      color: #6B6357;
+      max-width: 320px;
+      line-height: 1.5;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      margin-top: 32px;
+      min-height: 22px;
+    }
+
+    /* AUTRE INPUT */
+    .autre-input {
+      display: none;
+      width: 100%;
+      max-width: 400px;
+      margin: 12px auto 0;
+      padding: 14px;
+      background: #FFFFFF;
+      border: 1.5px solid #E2D9CC;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 15px;
+      color: #163026;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .autre-input::placeholder {
+      color: #C8BFB2;
+    }
+
+    .autre-input:focus {
+      border-color: #163026;
+    }
+
+    .autre-input.visible {
+      display: block;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    /* MOBILE */
+    @media (max-width: 480px) {
+      .question-title {
+        font-size: 28px;
+      }
+
+      .loading-calligraphy {
+        font-size: 180px;
+      }
+
+      .continue-btn {
+        min-width: 0;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 375px) {
+      .question-title {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill"></div>
+  </div>
+
+  <!-- MAIN WRAP -->
+  <div class="onboarding-wrap">
+
+    <!-- STEP INDICATOR -->
+    <div class="step-indicator" id="step-indicator">Étape 1 sur 6</div>
+
+    <!-- QUESTION 1 -->
+    <div class="question-screen active" id="q1">
+      <h2 class="question-title">Pourquoi tu veux mémoriser le Coran&nbsp;?</h2>
+      <p class="question-subtitle">Ton intention est la fondation de tout.</p>
+      <div class="choices">
+        <button class="choice-btn" onclick="selectChoice(this, 'q1')">Me rapprocher d'Allah</button>
+        <button class="choice-btn" onclick="selectChoice(this, 'q1')">Honorer une promesse</button>
+        <button class="choice-btn" onclick="selectChoice(this, 'q1')">Me discipliner</button>
+        <button class="choice-btn" onclick="selectChoice(this, 'q1')">Devenir Hafiz</button>
+        <button class="choice-btn" onclick="selectChoice(this, 'q1')">Autre</button>
+        <input class="autre-input" id="autre-input" type="text" placeholder="Dis-nous pourquoi..." />
+      </div>
+      <button class="continue-btn" id="continue-q1" onclick="goToNext(1)">Continuer</button>
+    </div>
+
+    <!-- QUESTION 2 -->
+    <div class="question-screen" id="q2">
+      <h2 class="question-title">Où en es-tu dans ton Hifz&nbsp;?</h2>
+      <p class="question-subtitle">Pas de jugement — juste pour adapter ton plan.</p>
+      <div class="choices">
+        <button class="choice-btn" onclick="selectChoice(this, 'q2')">Je commence de zéro</button>
+        <button class="choice-btn" onclick="selectChoice(this, 'q2')">J'ai quelques sourates</button>
+        <button class="choice-btn" onclick="selectChoice(this, 'q2')">J'ai déjà commencé et abandonné</button>
+        <button class="choice-btn" onclick="selectChoice(this, 'q2')">Je reprends après une longue pause</button>
+      </div>
+      <button class="continue-btn" id="continue-q2" onclick="goToNext(2)">Continuer</button>
+    </div>
+
+    <!-- QUESTION 3 -->
+    <div class="question-screen" id="q3">
+      <h2 class="question-title">Combien de temps tu peux consacrer par jour&nbsp;?</h2>
+      <p class="question-subtitle">Même 10 minutes par jour font une vraie différence.</p>
+      <div class="choices">
+        <button class="choice-btn" onclick="selectChoice(this, 'q3')">10 minutes</button>
+        <button class="choice-btn" onclick="selectChoice(this, 'q3')">20 minutes</button>
+        <button class="choice-btn" onclick="selectChoice(this, 'q3')">30 minutes</button>
+        <button class="choice-btn" onclick="selectChoice(this, 'q3')">45 minutes ou plus</button>
+      </div>
+      <button class="continue-btn" id="continue-q3" onclick="goToNext(3)">Continuer</button>
+    </div>
+
+    <!-- QUESTION 4 -->
+    <div class="question-screen" id="q4">
+      <h2 class="question-title">Qu'est-ce qui t'a bloqué jusqu'ici&nbsp;?</h2>
+      <p class="question-subtitle">Comprendre l'obstacle c'est déjà le surmonter.</p>
+      <div class="choices">
+        <button class="choice-btn" onclick="selectChoice(this, 'q4')">Le manque de constance</button>
+        <button class="choice-btn" onclick="selectChoice(this, 'q4')">Je ne savais pas par où commencer</button>
+        <button class="choice-btn" onclick="selectChoice(this, 'q4')">Pas assez de temps</button>
+        <button class="choice-btn" onclick="selectChoice(this, 'q4')">J'oubliais trop vite</button>
+      </div>
+      <button class="continue-btn" id="continue-q4" onclick="goToNext(4)">Continuer</button>
+    </div>
+
+    <!-- QUESTION 5 -->
+    <div class="question-screen" id="q5">
+      <h2 class="question-title">Tu connais déjà des sourates&nbsp;?</h2>
+      <p class="question-subtitle">Sélectionne celles que tu maîtrises — elles ne seront pas re-proposées.</p>
+      <div class="sourates-wrap" id="sourates-list"></div>
+      <div class="sourates-actions">
+        <button class="none-btn" onclick="selectNone()">Aucune</button>
+        <button class="continue-btn visible" style="margin-top:0" onclick="goToNext(5)">Continuer</button>
+      </div>
+    </div>
+
+    <!-- QUESTION 6 -->
+    <div class="question-screen" id="q6">
+      <h2 class="question-title">Comment tu t'appelles&nbsp;?</h2>
+      <p class="question-subtitle">Pour que ton plan soit vraiment le tien.</p>
+      <input
+        class="name-input"
+        id="name-input"
+        type="text"
+        placeholder="Ton prénom..."
+        oninput="onNameInput()"
+        autocomplete="given-name"
+      />
+      <button class="continue-btn" id="continue-q6" onclick="startLoading()">Créer mon plan</button>
+    </div>
+
+  </div>
+
+  <!-- LOADING SCREEN -->
+  <div id="loading-screen">
+    <div class="loading-calligraphy" aria-hidden="true">الله</div>
+    <p class="loading-logo">MyHifz</p>
+    <div class="loading-content">
+      <div class="loading-circle-wrap">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="90" fill="none" stroke="#E2D9CC" stroke-width="2"/>
+          <circle id="loading-arc" cx="100" cy="100" r="90" fill="none" stroke="#163026" stroke-width="2" stroke-linecap="round"
+            stroke-dasharray="565.49"
+            stroke-dashoffset="565.49"
+          />
+        </svg>
+        <div class="loading-circle-text">
+          <span class="loading-pct-num" id="loading-pct-num">0</span><span class="loading-pct-sign">%</span>
+        </div>
+      </div>
+      <p class="loading-phrase" id="loading-phrase"></p>
+    </div>
+  </div>
+
+  <script>
+    /* ── PAGE TRANSITION ── */
+    function navigateTo(url) {
+      document.body.style.transition = 'opacity 0.35s ease';
+      document.body.style.opacity = '0';
+      setTimeout(() => { window.location.href = url; }, 350);
+    }
+
+    /* ── STATE ── */
+    const TOTAL_STEPS = 6;
+    let currentStep = 1;
+
+    /* ── PROGRESS ── */
+    function updateProgress(step) {
+      const pct = ((step - 1) / TOTAL_STEPS) * 100;
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('step-indicator').textContent = `Étape ${step} sur ${TOTAL_STEPS}`;
+    }
+
+    /* ── CHOICE SELECTION ── */
+    function selectChoice(btn, qId) {
+      const screen = document.getElementById(qId);
+      screen.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      const continueBtn = document.getElementById('continue-' + qId);
+      if (continueBtn) continueBtn.classList.add('visible');
+      if (qId === 'q1') {
+        const autreInput = document.getElementById('autre-input');
+        const val = btn.textContent.trim();
+        localStorage.setItem('userIntention', val);
+        if (val === 'Autre') {
+          autreInput.classList.add('visible');
+          autreInput.focus();
+        } else {
+          autreInput.classList.remove('visible');
+        }
+      }
+      if (qId === 'q3') {
+        const label = btn.textContent.trim();
+        const timeMap = {
+          '10 minutes': '10',
+          '20 minutes': '20',
+          '30 minutes': '30',
+          '45 minutes ou plus': '45',
+        };
+        localStorage.setItem('userTime', timeMap[label] || label.replace(/[^0-9]/g, '').slice(0, 2));
+      }
+    }
+
+    /* ── NAVIGATE BETWEEN QUESTIONS ── */
+    function goToNext(fromStep) {
+      const currentScreen = document.getElementById('q' + fromStep);
+      currentScreen.classList.add('leaving');
+      setTimeout(() => {
+        currentScreen.classList.remove('active', 'leaving');
+        currentStep = fromStep + 1;
+        updateProgress(currentStep);
+        const nextScreen = document.getElementById('q' + currentStep);
+        if (nextScreen) {
+          nextScreen.classList.add('active');
+        }
+      }, 300);
+    }
+
+    /* ── NAME INPUT ── */
+    function onNameInput() {
+      const val = document.getElementById('name-input').value.trim();
+      const btn = document.getElementById('continue-q6');
+      if (val.length > 0) {
+        btn.classList.add('visible');
+        localStorage.setItem('userName', val);
+      } else {
+        btn.classList.remove('visible');
+        localStorage.removeItem('userName');
+      }
+    }
+
+    /* ── SOURATES NONE ── */
+    function selectNone() {
+      document.querySelectorAll('.sourate-item').forEach(item => {
+        item.classList.remove('checked');
+      });
+      goToNext(5);
+    }
+
+    /* ── LOADING SCREEN ── */
+    function startLoading() {
+      document.getElementById('loading-screen').classList.add('active');
+
+      const circumference = 2 * Math.PI * 90;
+      const arc      = document.getElementById('loading-arc');
+      const pctNum   = document.getElementById('loading-pct-num');
+      const phraseEl = document.getElementById('loading-phrase');
+
+      const phrases = [
+        { text: 'Analyse de tes réponses...',        at: 0    },
+        { text: 'Personnalisation de ton rythme...', at: 1500 },
+        { text: 'Sélection des sourates...',          at: 3000 },
+        { text: 'Finalisation du plan...',            at: 4500 },
+      ];
+
+      /* Phrase cycling */
+      phrases.forEach(p => {
+        setTimeout(() => {
+          phraseEl.style.opacity = '0';
+          setTimeout(() => {
+            phraseEl.innerHTML = p.text;
+            phraseEl.style.opacity = '1';
+          }, 400);
+        }, p.at);
+      });
+
+      /* Animated circle — fills up to 90% while API call runs, then finishes when done */
+      let currentPct = 0;
+      let targetPct  = 90;
+      let done       = false;
+
+      const startTime = performance.now();
+      const FAKE_DURATION = 6000; /* time to reach 90% */
+
+      function tick(now) {
+        const elapsed  = now - startTime;
+        if (!done) {
+          currentPct = Math.min((elapsed / FAKE_DURATION) * 90, 90);
+        } else {
+          currentPct = Math.min(currentPct + 2, 100);
+        }
+        const pct = Math.floor(currentPct);
+        pctNum.textContent = pct;
+        arc.style.strokeDashoffset = circumference * (1 - pct / 100);
+        if (currentPct < 100) {
+          requestAnimationFrame(tick);
+        } else {
+          pctNum.textContent = 100;
+          arc.style.strokeDashoffset = 0;
+          phraseEl.style.opacity = '0';
+          setTimeout(() => {
+            phraseEl.innerHTML = 'Ton plan est prêt <span style="color:#B8962E">✓</span>';
+            phraseEl.style.opacity = '1';
+          }, 200);
+          setTimeout(() => {
+            document.getElementById('loading-screen').style.transition = 'opacity 0.4s ease';
+            document.getElementById('loading-screen').style.opacity = '0';
+            setTimeout(() => { window.location.href = 'plan.html'; }, 400);
+          }, 800);
+        }
+      }
+      requestAnimationFrame(tick);
+
+      /* ── GEMINI API CALL ── */
+      const userName        = localStorage.getItem('userName')        || '';
+      const userIntention   = localStorage.getItem('userIntention')   || '';
+      const userLevel       = localStorage.getItem('userLevel')       || '';
+      const userTime        = localStorage.getItem('userTime')        || '20';
+      const userObstacle    = localStorage.getItem('userObstacle')    || '';
+      const userKnownSurahs = localStorage.getItem('userKnownSurahs') || 'Aucune';
+
+      const prompt = `Tu es un expert en mémorisation du Coran. Génère un plan personnalisé en JSON pour cet utilisateur :
+- Prénom : ${userName}
+- Intention : ${userIntention}
+- Niveau : ${userLevel}
+- Temps par jour : ${userTime} minutes
+- Obstacle : ${userObstacle}
+- Sourates connues : ${userKnownSurahs}
+
+Réponds UNIQUEMENT en JSON avec cette structure exacte :
+{
+  "surahStart": 78,
+  "ayahPerDay": 2,
+  "daysPerWeek": 5,
+  "minutesPerSession": 20,
+  "memorizationMinutes": 6,
+  "revisionMinutes": 14,
+  "motivationPhrase": "phrase personnalisée selon l'intention",
+  "firstSurahName": "An-Naba"
+}`;
+
+      const API_KEY = 'AIzaSyDUZUjPkC6oTPJHgjqsOdmmjtPRPvD674o';
+      const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+
+      fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
+      })
+      .then(res => res.json())
+      .then(json => {
+        /* Extract text content from Gemini response */
+        const raw  = json.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        /* Strip markdown code fences if present */
+        const clean = raw.replace(/```json|```/g, '').trim();
+        const data = JSON.parse(clean);
+
+        localStorage.setItem('aiPlan',        JSON.stringify(data));
+        localStorage.setItem('currentSurah',  data.surahStart);
+        localStorage.setItem('currentAyah',   1);
+        localStorage.setItem('userTime',      data.minutesPerSession);
+        if (data.motivationPhrase) {
+          localStorage.setItem('motivationPhrase', data.motivationPhrase);
+        }
+      })
+      .catch(() => {
+        /* Fallback defaults — plan.html will handle missing values gracefully */
+        localStorage.setItem('currentSurah', '78');
+        localStorage.setItem('currentAyah',  '1');
+      })
+      .finally(() => {
+        /* Signal animation to finish */
+        done = true;
+      });
+    }
+
+    /* ── BUILD SOURATES LIST ── */
+    const sourates = [
+      'Al-Fatiha','Al-Baqara','Al-Imran','An-Nisa','Al-Ma\'ida','Al-An\'am','Al-A\'raf',
+      'Al-Anfal','At-Tawba','Yunus','Hud','Yusuf','Ar-Ra\'d','Ibrahim','Al-Hijr','An-Nahl',
+      'Al-Isra','Al-Kahf','Maryam','Ta-Ha','Al-Anbiya','Al-Hajj','Al-Mu\'minun','An-Nur',
+      'Al-Furqan','Ash-Shu\'ara','An-Naml','Al-Qasas','Al-Ankabut','Ar-Rum','Luqman',
+      'As-Sajda','Al-Ahzab','Saba','Fatir','Ya-Sin','As-Saffat','Sad','Az-Zumar','Ghafir',
+      'Fussilat','Ash-Shura','Az-Zukhruf','Ad-Dukhan','Al-Jathiya','Al-Ahqaf','Muhammad',
+      'Al-Fath','Al-Hujurat','Qaf','Adh-Dhariyat','At-Tur','An-Najm','Al-Qamar','Ar-Rahman',
+      'Al-Waqi\'a','Al-Hadid','Al-Mujadila','Al-Hashr','Al-Mumtahana','As-Saf','Al-Jumu\'a',
+      'Al-Munafiqun','At-Taghabun','At-Talaq','At-Tahrim','Al-Mulk','Al-Qalam','Al-Haqqa',
+      'Al-Ma\'arij','Nuh','Al-Jinn','Al-Muzzammil','Al-Muddaththir','Al-Qiyama','Al-Insan',
+      'Al-Mursalat','An-Naba\'','An-Nazi\'at','Abasa','At-Takwir','Al-Infitar','Al-Mutaffifin',
+      'Al-Inshiqaq','Al-Buruj','At-Tariq','Al-A\'la','Al-Ghashiya','Al-Fajr','Al-Balad',
+      'Ash-Shams','Al-Layl','Ad-Duha','Ash-Sharh','At-Tin','Al-Alaq','Al-Qadr','Al-Bayyina',
+      'Az-Zalzala','Al-Adiyat','Al-Qari\'a','At-Takathur','Al-Asr','Al-Humaza','Al-Fil',
+      'Quraysh','Al-Ma\'un','Al-Kawthar','Al-Kafirun','An-Nasr','Al-Masad','Al-Ikhlas',
+      'Al-Falaq','An-Nas'
+    ];
+
+    const list = document.getElementById('sourates-list');
+    sourates.forEach((name, idx) => {
+      const item = document.createElement('div');
+      item.className = 'sourate-item';
+      item.innerHTML = `
+        <div class="sourate-checkbox">
+          <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+            <path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="sourate-num">${idx + 1}.</span>
+        <span class="sourate-name">${name}</span>
+      `;
+      item.addEventListener('click', () => item.classList.toggle('checked'));
+      list.appendChild(item);
+    });
+
+    /* ── INIT ── */
+    updateProgress(1);
+  </script>
+
+</body>
+</html>

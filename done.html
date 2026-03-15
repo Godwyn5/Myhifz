@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyHifz — Session accomplie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500&family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #F5F0E6;
+      color: #163026;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      animation: bodyFadeIn 0.5s ease forwards;
+    }
+
+    @keyframes bodyFadeIn { to { opacity: 1; } }
+
+    /* ── CALLIGRAPHIE FOND ── */
+    .bg-calligraphy {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Amiri', serif;
+      font-size: 320px;
+      color: #163026;
+      opacity: 0.04;
+      pointer-events: none;
+      user-select: none;
+      line-height: 1;
+      white-space: nowrap;
+      z-index: 0;
+    }
+
+    /* ── CERCLES CONCENTRIQUES ── */
+    .ripple-wrap {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .ripple {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      width: 0;
+      height: 0;
+    }
+
+    .ripple-1 {
+      border: 2px solid rgba(184, 150, 46, 0.6);
+      animation: expand 1s ease-out 0s forwards;
+    }
+
+    .ripple-2 {
+      border: 2px solid rgba(184, 150, 46, 0.4);
+      animation: expand 1s ease-out 0.2s forwards;
+    }
+
+    .ripple-3 {
+      border: 2px solid rgba(184, 150, 46, 0.2);
+      animation: expand 1s ease-out 0.4s forwards;
+    }
+
+    @keyframes expand {
+      from { width: 0;     height: 0;     opacity: 1; }
+      to   { width: 300px; height: 300px; opacity: 0; }
+    }
+
+    /* ── CONTENU PRINCIPAL ── */
+    .content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 480px;
+      margin: auto;
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    /* ── ICÔNE CHECK ── */
+    .check-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #163026, #2d5a42);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      box-shadow: 0 16px 48px rgba(15, 35, 24, 0.3);
+      font-size: 36px;
+      color: #FFFFFF;
+      opacity: 0;
+      animation: checkPop 0.5s ease-out 0.3s forwards;
+    }
+
+    @keyframes checkPop {
+      from { opacity: 0; transform: scale(0.5); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* ── TITRE ── */
+    .done-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 42px;
+      color: #163026;
+      margin-top: 24px;
+      line-height: 1.15;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.5s forwards;
+    }
+
+    /* ── STREAK ── */
+    .done-streak {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 28px;
+      color: #B8962E;
+      margin-top: 8px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.6s forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── CARTE STATS ── */
+    .stats-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(15, 35, 24, 0.08);
+      padding: 28px;
+      margin-top: 32px;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.7s forwards;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr 1px 1fr;
+      align-items: center;
+    }
+
+    .stat-divider {
+      background: #E2D9CC;
+      width: 1px;
+      height: 56px;
+      align-self: center;
+    }
+
+    .stat-col { text-align: center; padding: 0 8px; }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 36px;
+      color: #163026;
+      line-height: 1;
+      display: block;
+    }
+
+    .stat-label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: #B8962E;
+      text-transform: uppercase;
+      display: block;
+      margin-top: 6px;
+    }
+
+    /* ── PHRASE PERSONNALISÉE ── */
+    .done-phrase {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 18px;
+      color: #6B6357;
+      text-align: center;
+      max-width: 380px;
+      margin: 24px auto 0 auto;
+      line-height: 1.65;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 0.8s forwards;
+    }
+
+    /* ── BOUTON ── */
+    .btn-tomorrow {
+      display: inline-block;
+      margin-top: 32px;
+      background: linear-gradient(135deg, #163026, #2d5a42);
+      color: #FFFFFF;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 17px;
+      padding: 16px 48px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 32px rgba(15, 35, 24, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 1s forwards;
+    }
+
+    .btn-tomorrow:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 40px rgba(15, 35, 24, 0.38);
+    }
+
+    /* MOBILE */
+    @media (max-width: 375px) {
+      .done-title   { font-size: 34px; }
+      .done-streak  { font-size: 22px; }
+      .stat-number  { font-size: 28px; }
+      .done-phrase  { font-size: 16px; }
+      .content      { padding: 32px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CALLIGRAPHIE FOND -->
+  <div class="bg-calligraphy" aria-hidden="true">الله</div>
+
+  <!-- CERCLES CONCENTRIQUES -->
+  <div class="ripple-wrap" aria-hidden="true">
+    <div class="ripple ripple-1"></div>
+    <div class="ripple ripple-2"></div>
+    <div class="ripple ripple-3"></div>
+  </div>
+
+  <!-- CONTENU PRINCIPAL -->
+  <div class="content">
+
+    <!-- ICÔNE CHECK -->
+    <div class="check-icon" aria-hidden="true">✓</div>
+
+    <!-- TITRE -->
+    <h1 class="done-title">Session accomplie.</h1>
+
+    <!-- STREAK -->
+    <p class="done-streak" id="done-streak">🔥 — jours consécutifs</p>
+
+    <!-- STATS -->
+    <div class="stats-card">
+      <div class="stats-grid">
+        <div class="stat-col">
+          <span class="stat-number" id="stat-memorized">0</span>
+          <span class="stat-label">Mémorisés</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-col">
+          <span class="stat-number" id="stat-revised">0</span>
+          <span class="stat-label">Révisés</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-col">
+          <span class="stat-number" id="stat-total">0</span>
+          <span class="stat-label">Total</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHRASE PERSONNALISÉE -->
+    <p class="done-phrase" id="done-phrase"></p>
+
+    <!-- BOUTON -->
+    <button class="btn-tomorrow" onclick="navigateTo('index.html')">À demain إن شاء الله</button>
+
+  </div>
+
+  <script>
+    /* ── PAGE TRANSITION ── */
+    function navigateTo(url) {
+      document.body.style.transition = 'opacity 0.35s ease';
+      document.body.style.opacity = '0';
+      setTimeout(() => { window.location.href = url; }, 350);
+    }
+
+    /* ── DATE HELPER ── */
+    function toDateStr(d) { return d.toISOString().slice(0, 10); }
+
+    /* ── LOAD & UPDATE LOCALSTORAGE ── */
+    let streak         = parseInt(localStorage.getItem('streak')         || '0', 10);
+    const todayMem     = parseInt(localStorage.getItem('todayMemorized') || '0', 10);
+    const todayRev     = parseInt(localStorage.getItem('todayRevised')   || '0', 10);
+    const totalMem     = parseInt(localStorage.getItem('totalMemorized') || '0', 10);
+    const todayStr     = toDateStr(new Date());
+
+    /* Increment streak and save session date */
+    streak = streak + 1;
+    localStorage.setItem('streak', String(streak));
+    localStorage.setItem('lastSessionDate', todayStr);
+
+    /* Update sessionDates array */
+    const sessionDates = JSON.parse(localStorage.getItem('sessionDates') || '[]');
+    if (!sessionDates.includes(todayStr)) {
+      sessionDates.push(todayStr);
+      localStorage.setItem('sessionDates', JSON.stringify(sessionDates));
+    }
+
+    /* ── POPULATE STREAK ── */
+    document.getElementById('done-streak').textContent = `🔥 ${streak} jour${streak > 1 ? 's' : ''} consécutif${streak > 1 ? 's' : ''}`;
+
+    /* ── POPULATE STATS ── */
+    document.getElementById('stat-memorized').textContent = todayMem;
+    document.getElementById('stat-revised').textContent   = todayRev;
+    document.getElementById('stat-total').textContent     = totalMem;
+
+    /* ── PHRASE PERSONNALISÉE ── */
+    function getPhrase(s) {
+      if (s === 1)       return 'Le premier pas est toujours le plus difficile. Tu l\u2019as fait.';
+      if (s === 2)       return 'Deux jours de suite. Continue.';
+      if (s <= 6)        return 'L\u2019habitude commence à se former. Ne t\u2019arrête pas maintenant.';
+      if (s <= 13)       return 'Une semaine complète. Tu es en train de devenir quelqu\u2019un de différent.';
+      if (s <= 29)       return 'Deux semaines. Le Coran s\u2019installe dans ton c\u0153ur.';
+      return 'Un mois. Tu es hafiz en devenir. Allah facilite ton chemin.';
+    }
+
+    document.getElementById('done-phrase').textContent = getPhrase(streak);
+  </script>
+
+</body>
+</html>

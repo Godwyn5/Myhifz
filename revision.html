@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyHifz — Révision</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500&family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #F5F0E6;
+      color: #163026;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      animation: bodyFadeIn 0.5s ease forwards;
+    }
+
+    @keyframes bodyFadeIn { to { opacity: 1; } }
+
+    /* ── HEADER ── */
+    .header {
+      position: relative;
+      background: linear-gradient(160deg, #0d1f17 0%, #163026 50%, #1e4535 100%);
+      padding: 24px 24px 32px 24px;
+      display: grid;
+      grid-template-columns: 40px 1fr 40px;
+      align-items: center;
+      animation: headerSlideDown 0.5s ease both;
+      flex-shrink: 0;
+    }
+
+    @keyframes headerSlideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .header-back {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 20px;
+      color: #FFFFFF;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .header-center { text-align: center; }
+
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 18px;
+      color: #FFFFFF;
+      display: block;
+    }
+
+    .header-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 2px;
+      display: block;
+    }
+
+    .header-counter {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: #FFFFFF;
+      text-align: right;
+    }
+
+    /* ── MAIN CARD ── */
+    .rev-card {
+      flex: 1;
+      margin: 16px;
+      background: #FFFFFF;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(15, 35, 24, 0.15);
+      padding: 40px 32px;
+      display: flex;
+      flex-direction: column;
+      animation: cardFadeIn 0.6s ease both;
+    }
+
+    @keyframes cardFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .rev-card.fade-out {
+      animation: cardFadeOut 0.3s ease forwards;
+    }
+
+    .rev-card.fade-in-anim {
+      animation: cardFadeIn2 0.3s ease forwards;
+    }
+
+    @keyframes cardFadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to   { opacity: 0; transform: translateY(-10px); }
+    }
+
+    @keyframes cardFadeIn2 {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-card {
+      flex: 1;
+      margin: 16px;
+      background: #FFFFFF;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(15, 35, 24, 0.15);
+      padding: 48px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 16px;
+      animation: cardFadeIn 0.6s ease both;
+    }
+
+    .empty-emoji {
+      font-size: 48px;
+      line-height: 1;
+    }
+
+    .empty-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 24px;
+      color: #163026;
+    }
+
+    .empty-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 15px;
+      color: #6B6357;
+    }
+
+    .btn-dashboard {
+      margin-top: 8px;
+      background: #163026;
+      color: #FFFFFF;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 14px 32px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(15, 35, 24, 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .btn-dashboard:hover { transform: translateY(-2px); }
+
+    /* ── CARD CONTENT ── */
+    .rev-badge {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: #B8962E;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .rev-instruction {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 16px;
+      color: #6B6357;
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .rev-transliteration {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-style: italic;
+      font-size: 18px;
+      color: #163026;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .rev-translation {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      color: #999999;
+      text-align: center;
+      margin-top: 12px;
+      line-height: 1.6;
+    }
+
+    /* ── ARABIC REVEAL ── */
+    .arabic-wrap {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.4s ease, opacity 0.4s ease;
+    }
+
+    .arabic-wrap.revealed {
+      max-height: 400px;
+      opacity: 1;
+    }
+
+    .rev-divider {
+      border: none;
+      border-top: 1px solid #E2D9CC;
+      margin: 24px 0 20px 0;
+    }
+
+    .rev-arabic {
+      font-family: 'Amiri', serif;
+      font-weight: 700;
+      font-size: 42px;
+      color: #163026;
+      text-align: center;
+      direction: rtl;
+      line-height: 1.8;
+      display: block;
+    }
+
+    /* ── SPACER ── */
+    .card-spacer { flex: 1; }
+
+    /* ── LOADING ── */
+    .loading-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error-text {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: #B8962E;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* ── BUTTONS ── */
+    .btn-reveal {
+      width: 100%;
+      margin-top: 24px;
+      background: transparent;
+      border: 1.5px solid #163026;
+      color: #163026;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .btn-reveal:hover { background: rgba(22, 48, 38, 0.05); }
+
+    .eval-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.3s ease 0.3s, transform 0.3s ease 0.3s;
+      flex-shrink: 0;
+    }
+
+    .eval-row.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .btn-knew {
+      flex: 1;
+      background: linear-gradient(135deg, #163026, #2d5a42);
+      color: #FFFFFF;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 14px 10px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(15, 35, 24, 0.3);
+      transition: transform 0.2s ease;
+      text-align: center;
+    }
+
+    .btn-knew:hover { transform: translateY(-2px); }
+
+    .btn-forgot {
+      flex: 1;
+      background: transparent;
+      border: 1.5px solid #E2D9CC;
+      color: #999999;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 14px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+      text-align: center;
+    }
+
+    .btn-forgot:hover { border-color: #C8BFB2; }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap {
+      margin: 0 16px;
+      flex-shrink: 0;
+    }
+
+    .progress-track {
+      background: #E2D9CC;
+      height: 4px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: linear-gradient(90deg, #163026, #B8962E);
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    .progress-label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 12px;
+      color: #6B6357;
+      text-align: center;
+      margin-top: 8px;
+      margin-bottom: 16px;
+    }
+
+    /* MOBILE */
+    @media (max-width: 375px) {
+      .rev-arabic { font-size: 34px; }
+      .rev-card { padding: 28px 20px; }
+      .btn-knew, .btn-forgot { font-size: 13px; padding: 12px 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <button class="header-back" onclick="navigateTo('index.html')">←</button>
+    <div class="header-center">
+      <span class="header-title">Révision</span>
+      <span class="header-sub" id="header-sub">—</span>
+    </div>
+    <span class="header-counter" id="header-counter"></span>
+  </header>
+
+  <!-- CONTENT AREA (populated by JS) -->
+  <div id="main-content" style="display:contents"></div>
+
+  <script>
+    /* ── PAGE TRANSITION ── */
+    function navigateTo(url) {
+      document.body.style.transition = 'opacity 0.35s ease';
+      document.body.style.opacity = '0';
+      setTimeout(() => { window.location.href = url; }, 350);
+    }
+
+    /* ── SURAH NAMES ── */
+    const SURAH_NAMES = [
+      null,'Al-Fatiha','Al-Baqara','Al-Imran','An-Nisa','Al-Maida','Al-Anam','Al-Araf',
+      'Al-Anfal','At-Tawba','Yunus','Hud','Yusuf','Ar-Rad','Ibrahim','Al-Hijr','An-Nahl',
+      'Al-Isra','Al-Kahf','Maryam','Ta-Ha','Al-Anbiya','Al-Hajj','Al-Muminun','An-Nur',
+      'Al-Furqan','Ash-Shuara','An-Naml','Al-Qasas','Al-Ankabut','Ar-Rum','Luqman',
+      'As-Sajda','Al-Ahzab','Saba','Fatir','Ya-Sin','As-Saffat','Sad','Az-Zumar','Ghafir',
+      'Fussilat','Ash-Shura','Az-Zukhruf','Ad-Dukhan','Al-Jathiya','Al-Ahqaf','Muhammad',
+      'Al-Fath','Al-Hujurat','Qaf','Adh-Dhariyat','At-Tur','An-Najm','Al-Qamar','Ar-Rahman',
+      'Al-Waqia','Al-Hadid','Al-Mujadila','Al-Hashr','Al-Mumtahina','As-Saf',"Al-Jumu'a",
+      'Al-Munafiqun','At-Taghabun','At-Talaq','At-Tahrim','Al-Mulk','Al-Qalam','Al-Haqqa',
+      "Al-Ma'arij",'Nuh','Al-Jinn','Al-Muzzammil','Al-Muddaththir','Al-Qiyama','Al-Insan',
+      'Al-Mursalat',"An-Naba'",'An-Naziat','Abasa','At-Takwir','Al-Infitar','Al-Mutaffifin',
+      'Al-Inshiqaq','Al-Buruj','At-Tariq',"Al-A'la",'Al-Ghashiya','Al-Fajr','Al-Balad',
+      'Ash-Shams','Al-Layl','Ad-Duha','Ash-Sharh','At-Tin','Al-Alaq','Al-Qadr','Al-Bayyina',
+      'Az-Zalzala','Al-Adiyat',"Al-Qari'a",'At-Takathur','Al-Asr','Al-Humaza','Al-Fil',
+      'Quraysh',"Al-Ma'un",'Al-Kawthar','Al-Kafirun','An-Nasr','Al-Masad','Al-Ikhlas',
+      'Al-Falaq','An-Nas',
+    ];
+
+    /* ── DATE HELPER ── */
+    function toDateStr(d) { return d.toISOString().slice(0, 10); }
+    const todayStr = toDateStr(new Date());
+
+    /* ── LOAD & FILTER REVIEW LIST ── */
+    const rawList   = JSON.parse(localStorage.getItem('reviewList') || '[]');
+    /* Support both plain strings and objects {surah, ayah, nextReview} */
+    const dueList   = rawList.filter(item => {
+      if (typeof item === 'object' && item.nextReview) {
+        return item.nextReview <= todayStr;
+      }
+      return true; /* plain string items are always due */
+    });
+
+    /* ── RENDER EMPTY STATE ── */
+    function renderEmpty() {
+      document.getElementById('header-sub').textContent     = 'Aucun ayat à réviser';
+      document.getElementById('header-counter').textContent = '0 / 0';
+
+      const el = document.createElement('div');
+      el.className = 'empty-card';
+      el.innerHTML = `
+        <span class="empty-emoji">🎉</span>
+        <p class="empty-title">Aucune révision aujourd'hui</p>
+        <p class="empty-sub">Tu as tout révisé. Reviens demain.</p>
+        <button class="btn-dashboard" onclick="navigateTo('index.html')">Retour au dashboard</button>
+      `;
+      document.getElementById('main-content').appendChild(el);
+    }
+
+    /* ── BUILD REVIEW HTML ── */
+    function buildReviewUI() {
+      /* Card */
+      const card = document.createElement('div');
+      card.className = 'rev-card';
+      card.id        = 'rev-card';
+      card.innerHTML = `
+        <span class="rev-badge">Révision</span>
+        <p class="rev-instruction">Essaie de réciter cet ayat de mémoire</p>
+        <div id="card-body">
+          <div class="loading-wrap" id="loading-wrap">
+            <svg class="spinner" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="#E2D9CC" stroke-width="2"/>
+              <path d="M12 2a10 10 0 0 1 10 10" stroke="#B8962E" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div id="ayat-data" style="display:none; flex-direction:column; flex:1">
+            <p class="rev-transliteration" id="rev-translit"></p>
+            <p class="rev-translation" id="rev-translation"></p>
+            <div class="arabic-wrap" id="arabic-wrap">
+              <hr class="rev-divider" />
+              <span class="rev-arabic" id="rev-arabic"></span>
+            </div>
+            <div class="card-spacer"></div>
+            <button class="btn-reveal" id="btn-reveal" onclick="revealAyat()">Voir l'ayat</button>
+            <div class="eval-row" id="eval-row">
+              <button class="btn-knew"   onclick="evaluate(true)">\u2713&nbsp;Je m\u2019en souvenais</button>
+              <button class="btn-forgot" onclick="evaluate(false)">\u2717&nbsp;Je ne m\u2019en souvenais pas</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('main-content').appendChild(card);
+
+      /* Progress bar */
+      const prog = document.createElement('div');
+      prog.className = 'progress-wrap';
+      prog.innerHTML = `
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <p class="progress-label" id="progress-label"></p>
+      `;
+      document.getElementById('main-content').appendChild(prog);
+    }
+
+    /* ── API CACHE ── */
+    const ayatCache = {};
+
+    async function fetchAyat(surah, ayah) {
+      const key = `${surah}:${ayah}`;
+      if (ayatCache[key]) return ayatCache[key];
+      const url  = `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/editions/quran-uthmani,en.transliteration,fr.hamidullah`;
+      const res  = await fetch(url);
+      if (!res.ok) throw new Error('API error');
+      const json = await res.json();
+      const d    = json.data;
+      const result = { arabic: d[0].text, transliteration: d[1].text, translation: d[2].text };
+      ayatCache[key] = result;
+      return result;
+    }
+
+    /* ── STATE ── */
+    let currentIndex = 0;
+
+    function getItem(idx) {
+      const item = dueList[idx];
+      if (typeof item === 'object') return { surah: item.surah, ayah: item.ayah };
+      /* Fallback: parse "Surah:Ayah" string or use default */
+      return { surah: 78, ayah: idx + 1 };
+    }
+
+    /* ── UPDATE HEADER + PROGRESS ── */
+    function updateMeta() {
+      const total   = dueList.length;
+      const current = currentIndex + 1;
+      const item    = getItem(currentIndex);
+      const name    = SURAH_NAMES[item.surah] || 'Sourate';
+
+      document.getElementById('header-sub').textContent     = `${name} • Ayat ${item.ayah}`;
+      document.getElementById('header-counter').textContent = `${current} / ${total}`;
+      document.getElementById('progress-label').textContent = `Ayat ${current} sur ${total}`;
+      document.getElementById('progress-fill').style.width  = ((current / total) * 100) + '%';
+    }
+
+    /* ── LOAD AYAT ── */
+    async function loadCurrent() {
+      /* Reset reveal state */
+      const arabicWrap = document.getElementById('arabic-wrap');
+      const btnReveal  = document.getElementById('btn-reveal');
+      const evalRow    = document.getElementById('eval-row');
+
+      if (arabicWrap) arabicWrap.classList.remove('revealed');
+      if (btnReveal)  { btnReveal.style.display = 'block'; btnReveal.style.opacity = '1'; }
+      if (evalRow)    evalRow.classList.remove('visible');
+
+      document.getElementById('loading-wrap').style.display = 'flex';
+      document.getElementById('ayat-data').style.display    = 'none';
+
+      updateMeta();
+
+      try {
+        const item = getItem(currentIndex);
+        const data = await fetchAyat(item.surah, item.ayah);
+
+        document.getElementById('rev-translit').textContent    = data.transliteration;
+        document.getElementById('rev-translation').textContent = data.translation;
+        document.getElementById('rev-arabic').textContent      = data.arabic;
+
+        document.getElementById('loading-wrap').style.display  = 'none';
+        document.getElementById('ayat-data').style.display     = 'flex';
+      } catch (e) {
+        document.getElementById('loading-wrap').innerHTML = `
+          <p class="error-text">Impossible de charger le verset.<br>Vérifie ta connexion.</p>
+        `;
+      }
+    }
+
+    /* ── REVEAL ARABIC ── */
+    function revealAyat() {
+      const btn = document.getElementById('btn-reveal');
+      btn.style.transition = 'opacity 0.3s ease';
+      btn.style.opacity    = '0';
+      setTimeout(() => {
+        btn.style.display = 'none';
+        document.getElementById('arabic-wrap').classList.add('revealed');
+        document.getElementById('eval-row').classList.add('visible');
+      }, 300);
+    }
+
+    /* ── SRS: compute next review date ── */
+    function nextReviewDate(knew, item) {
+      const d = new Date();
+      if (!knew) {
+        d.setDate(d.getDate() + 1); /* forgot → tomorrow */
+      } else {
+        const interval = (typeof item === 'object' && item.interval) ? item.interval * 2 : 2;
+        d.setDate(d.getDate() + Math.min(interval, 30));
+      }
+      return toDateStr(d);
+    }
+
+    /* ── EVALUATE ── */
+    function evaluate(knew) {
+      /* Update reviewList in localStorage */
+      const stored  = JSON.parse(localStorage.getItem('reviewList') || '[]');
+      const item    = dueList[currentIndex];
+      const rawItem = getItem(currentIndex);
+
+      /* Find and update the item in stored list */
+      const idx = stored.findIndex(s => {
+        if (typeof s === 'object') return s.surah === rawItem.surah && s.ayah === rawItem.ayah;
+        return false;
+      });
+
+      const interval = (typeof item === 'object' && item.interval) ? item.interval : 1;
+      const updated  = {
+        surah:      rawItem.surah,
+        ayah:       rawItem.ayah,
+        nextReview: nextReviewDate(knew, item),
+        interval:   knew ? Math.min(interval * 2, 30) : 1,
+      };
+
+      if (idx >= 0) stored[idx] = updated;
+      else stored.push(updated);
+      localStorage.setItem('reviewList', JSON.stringify(stored));
+
+      /* Advance or finish */
+      if (currentIndex >= dueList.length - 1) {
+        navigateTo('done.html');
+        return;
+      }
+
+      /* Animate out → in */
+      const card = document.getElementById('rev-card');
+      card.classList.add('fade-out');
+      setTimeout(() => {
+        card.classList.remove('fade-out');
+        currentIndex++;
+        loadCurrent();
+        card.classList.add('fade-in-anim');
+        setTimeout(() => card.classList.remove('fade-in-anim'), 300);
+      }, 300);
+    }
+
+    /* ── INIT ── */
+    if (dueList.length === 0) {
+      renderEmpty();
+    } else {
+      buildReviewUI();
+      loadCurrent();
+    }
+  </script>
+
+</body>
+</html>
