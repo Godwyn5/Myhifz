@@ -765,15 +765,10 @@ Réponds UNIQUEMENT en JSON avec cette structure exacte :
   "firstSurahName": "An-Naba"
 }`;
 
-      const API_KEY = 'AIzaSyDUZUjPkC6oTPJHgjqsOdmmjtPRPvD674o';
-      const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
-
-      fetch(API_URL, {
+      fetch('/api/generate-plan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
-        })
+        body: JSON.stringify({ prompt })
       })
       .then(res => res.json())
       .then(json => {
