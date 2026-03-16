@@ -780,7 +780,7 @@
     const yesterStr = toDateStr(yesterday);
     const sessionDoneToday = lastSessionDate === todayStr;
 
-    if (lastSessionDate && lastSessionDate !== todayStr && lastSessionDate !== yesterStr) {
+    if (!lastSessionDate || (lastSessionDate !== todayStr && lastSessionDate !== yesterStr)) {
       streak = 0;
       localStorage.setItem('streak', '0');
     }
@@ -825,7 +825,7 @@
     if (sessionDoneToday) {
       document.getElementById('btn-wrap').innerHTML = `
         <div class="btn-done-wrap">
-          <div class="btn-done">✓ Session complétée</div>
+          <div class="btn-done">Session complétée ✓</div>
           <p class="btn-done-sub">Reviens demain pour continuer ton Hifz.</p>
         </div>
       `;

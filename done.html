@@ -307,10 +307,14 @@
     const totalMem     = parseInt(localStorage.getItem('totalMemorized') || '0', 10);
     const todayStr     = toDateStr(new Date());
 
-    /* Increment streak and save session date */
-    streak = streak + 1;
-    localStorage.setItem('streak', String(streak));
-    localStorage.setItem('lastSessionDate', todayStr);
+    const lastSessionDate = localStorage.getItem('lastSessionDate') || '';
+
+    /* Only increment streak if session not already counted today */
+    if (lastSessionDate !== todayStr) {
+      streak = streak + 1;
+      localStorage.setItem('streak', String(streak));
+      localStorage.setItem('lastSessionDate', todayStr);
+    }
 
     /* Update sessionDates array */
     const sessionDates = JSON.parse(localStorage.getItem('sessionDates') || '[]');
