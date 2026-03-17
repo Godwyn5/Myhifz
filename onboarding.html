@@ -240,6 +240,11 @@
 
     /* ── NAVIGATE BETWEEN QUESTIONS ── */
     function goToNext(fromStep) {
+      if (fromStep === 5) {
+        const checkedItems = document.querySelectorAll('.sourate-item.checked .sourate-name');
+        const knownSurahs = Array.from(checkedItems).map(el => el.textContent.trim());
+        localStorage.setItem('userKnownSurahs', knownSurahs.length > 0 ? knownSurahs.join(', ') : 'Aucune');
+      }
       const currentScreen = document.getElementById('q' + fromStep);
       currentScreen.classList.add('leaving');
       setTimeout(() => {

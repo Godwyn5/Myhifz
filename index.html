@@ -792,9 +792,13 @@
     let memEnd   = currentAyah + ayatPerDay;
 
     if (SURAHS[memSurah] && memStart > SURAHS[memSurah].a) {
-      memSurah++;
+      memSurah = Math.min(memSurah + 1, 114);
       memStart = 1;
       memEnd   = ayatPerDay;
+    }
+
+    if (SURAHS[memSurah]) {
+      memEnd = Math.min(memEnd, SURAHS[memSurah].a);
     }
 
     if (memSurah > 114) {
