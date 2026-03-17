@@ -406,7 +406,7 @@
     async function fetchOne(surah, ayah) {
       const url        = `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/editions/quran-uthmani,en.transliteration,fr.hamidullah`;
       const controller = new AbortController();
-      const timer      = setTimeout(() => controller.abort(), 5000);
+      const timer      = setTimeout(() => controller.abort(), 10000);
       try {
         const res  = await fetch(url, { signal: controller.signal });
         clearTimeout(timer);
@@ -545,15 +545,16 @@
     async function init() {
       showLoading();
       updateProgress();
-      try {
-        /* Fire all fetch calls simultaneously */
-        prefetched = await Promise.all(
-          ayatList.map(ayah => fetchOne(currentSurah, ayah))
-        );
-        /* Show first ayat immediately from memory */
-        loadCurrent();
-      } catch (e) {
+      /* Use allSettled so one slow ayah doesn't block the rest */
+      const results = await Promise.allSettled(
+        ayatList.map(ayah => fetchOne(currentSurah, ayah))
+      );
+      prefetched = results.map(r => r.status === 'fulfilled' ? r.value : null);
+      /* If ALL failed show error; otherwise show what loaded */
+      if (prefetched.every(r => r === null)) {
         showError();
+      } else {
+        loadCurrent();
       }
     }
 

@@ -499,7 +499,7 @@
     async function fetchOne(surah, ayah) {
       const url        = `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/editions/quran-uthmani,en.transliteration,fr.hamidullah`;
       const controller = new AbortController();
-      const timer      = setTimeout(() => controller.abort(), 5000);
+      const timer      = setTimeout(() => controller.abort(), 10000);
       try {
         const res  = await fetch(url, { signal: controller.signal });
         clearTimeout(timer);
@@ -644,20 +644,21 @@
         return;
       }
       buildReviewUI();
-      /* Spinner already visible from buildReviewUI */
-      try {
-        prefetched = await Promise.all(
-          dueList.map((_, i) => {
-            const item = getItem(i);
-            return fetchOne(item.surah, item.ayah);
-          })
-        );
-        loadCurrent();
-      } catch (e) {
+      /* Use allSettled so one slow ayah doesn't block the rest */
+      const results = await Promise.allSettled(
+        dueList.map((_, i) => {
+          const item = getItem(i);
+          return fetchOne(item.surah, item.ayah);
+        })
+      );
+      prefetched = results.map(r => r.status === 'fulfilled' ? r.value : null);
+      if (prefetched.every(r => r === null)) {
         document.getElementById('loading-wrap').innerHTML = `
           <p class="error-text">Impossible de charger les versets.<br>Vérifie ta connexion.</p>
           <button onclick="init()" style="margin-top:16px;padding:10px 24px;background:#163026;color:#fff;border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer">↺ Réessayer</button>
         `;
+      } else {
+        loadCurrent();
       }
     }
 
