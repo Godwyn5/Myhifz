@@ -788,6 +788,14 @@
       localStorage.setItem('streak', '0');
     }
 
+    /* ── RESET DAILY COUNTERS if new day ── */
+    const lastResetDate = localStorage.getItem('lastResetDate') || '';
+    if (lastResetDate !== todayStr) {
+      localStorage.setItem('todayMemorized', '0');
+      localStorage.setItem('todayRevised',   '0');
+      localStorage.setItem('lastResetDate',  todayStr);
+    }
+
     /* ── COMPUTE NEXT AYAT ── */
     let memSurah = currentSurah;
     let memStart = currentAyah + 1;
@@ -804,7 +812,6 @@
     }
 
     const surahData  = SURAHS[memSurah] || { n: "An-Naba'", a: 40 };
-    memEnd = Math.min(memEnd, surahData.a);
 
     /* ── POPULATE HEADER ── */
     document.getElementById('header-name').textContent = userName || 'toi';

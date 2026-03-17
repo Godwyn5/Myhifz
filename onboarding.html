@@ -394,7 +394,13 @@ Réponds UNIQUEMENT en JSON avec cette structure exacte :
         const surahIndex = data.surahStart || 78;
         const correctSurahName = SURAH_NAMES_MAP[surahIndex] || data.firstSurahName || "An-Naba'";
         localStorage.setItem('currentSurahName',  correctSurahName);
-        localStorage.setItem('userTime',          String(data.minutesPerSession));
+        /* Map minutesPerSession to nearest valid key for ayatPerDayMap */
+        const rawMin = data.minutesPerSession || 20;
+        const validTimes = [10, 20, 30, 45];
+        const mappedTime = validTimes.reduce((prev, curr) =>
+          Math.abs(curr - rawMin) < Math.abs(prev - rawMin) ? curr : prev
+        );
+        localStorage.setItem('userTime', String(mappedTime));
         localStorage.setItem('reviewList',        '[]');
         localStorage.setItem('streak',            '0');
         localStorage.removeItem('lastSessionDate');

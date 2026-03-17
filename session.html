@@ -263,7 +263,7 @@
 
   <!-- HEADER -->
   <header class="header">
-    <button class="header-back" onclick="navigateTo('index.html')">←</button>
+    <button class="header-back" onclick="sessionStorage.removeItem('sessionInProgress');navigateTo('index.html')">←</button>
     <div class="header-center">
       <span class="header-surah" id="header-surah">—</span>
       <span class="header-ayat-range" id="header-range">—</span>
@@ -370,7 +370,13 @@
 
     /* If no ayat left in this surah, advance to next */
     if (ayatList.length === 0) {
-      const nextSurah = Math.min(currentSurah + 1, 114);
+      if (currentSurah >= 114) {
+        /* Entire Quran memorized */
+        sessionStorage.removeItem('sessionInProgress');
+        navigateTo('index.html');
+        return;
+      }
+      const nextSurah = currentSurah + 1;
       localStorage.setItem('currentSurah',     String(nextSurah));
       localStorage.setItem('currentAyah',      '0');
       localStorage.setItem('currentSurahName', SURAH_NAMES[nextSurah] || '');

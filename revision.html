@@ -445,7 +445,7 @@
         <span class="empty-emoji">🎉</span>
         <p class="empty-title">Aucune révision aujourd'hui</p>
         <p class="empty-sub">Tu as tout révisé. Reviens demain.</p>
-        <button class="btn-dashboard" onclick="localStorage.setItem('todayRevised','0');navigateTo('done.html')">Continuer</button>
+        <button class="btn-dashboard" onclick="localStorage.setItem('todayRevised','0');navigateTo('done.html')">Voir mes stats →</button>
       `;
       document.getElementById('main-content').appendChild(el);
     }
@@ -496,14 +496,22 @@
       document.getElementById('main-content').appendChild(prog);
     }
 
-    /* ── FETCH ONE AYAT ── */
+    /* ── FETCH ONE AYAT (5s timeout) ── */
     async function fetchOne(surah, ayah) {
-      const url  = `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/editions/quran-uthmani,en.transliteration,fr.hamidullah`;
-      const res  = await fetch(url);
-      if (!res.ok) throw new Error('API error');
-      const json = await res.json();
-      const d    = json.data;
-      return { arabic: d[0].text, transliteration: d[1].text, translation: d[2].text };
+      const url        = `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/editions/quran-uthmani,en.transliteration,fr.hamidullah`;
+      const controller = new AbortController();
+      const timer      = setTimeout(() => controller.abort(), 5000);
+      try {
+        const res  = await fetch(url, { signal: controller.signal });
+        clearTimeout(timer);
+        if (!res.ok) throw new Error('API error');
+        const json = await res.json();
+        const d    = json.data;
+        return { arabic: d[0].text, transliteration: d[1].text, translation: d[2].text };
+      } catch (e) {
+        clearTimeout(timer);
+        throw e;
+      }
     }
 
     /* ── STATE ── */
