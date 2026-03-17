@@ -570,39 +570,41 @@
       }, 300);
     }
 
-    /* ── SRS: compute next review date ── */
-    function nextReviewDate(knew, item) {
+    /* ── SRS: days until next review by cycle ── */
+    const CYCLE_DAYS = [0, 3, 7, 14, 30, 60]; /* index = cycle number, 0 unused */
+
+    function getDatePlusDays(days) {
       const d = new Date();
-      if (!knew) {
-        d.setDate(d.getDate() + 1); /* forgot → tomorrow */
-      } else {
-        const interval = (typeof item === 'object' && item.interval) ? item.interval * 2 : 2;
-        d.setDate(d.getDate() + Math.min(interval, 30));
-      }
+      d.setDate(d.getDate() + days);
       return toDateStr(d);
     }
 
     /* ── EVALUATE ── */
     function evaluate(knew) {
-      /* Update reviewList in localStorage */
       const stored  = JSON.parse(localStorage.getItem('reviewList') || '[]');
       const item    = dueList[currentIndex];
       const rawItem = getItem(currentIndex);
 
-      /* Find and update the item in stored list */
-      const idx = stored.findIndex(s => {
-        if (typeof s === 'object') return s.surah === rawItem.surah && s.ayah === rawItem.ayah;
-        return false;
-      });
+      const currentCycle = (typeof item === 'object' && item.reviewCycle) ? item.reviewCycle : 1;
 
-      const interval = (typeof item === 'object' && item.interval) ? item.interval : 1;
-      const updated  = {
-        surah:      rawItem.surah,
-        ayah:       rawItem.ayah,
-        nextReview: nextReviewDate(knew, item),
-        interval:   knew ? Math.min(interval * 2, 30) : 1,
+      let nextCycle, nextReview;
+      if (knew) {
+        nextCycle  = currentCycle + 1;
+        const days = CYCLE_DAYS[Math.min(nextCycle, CYCLE_DAYS.length - 1)];
+        nextReview = getDatePlusDays(days);
+      } else {
+        nextCycle  = currentCycle; /* cycle unchanged on forget */
+        nextReview = getDatePlusDays(1); /* review again tomorrow */
+      }
+
+      const updated = {
+        surah:       rawItem.surah,
+        ayah:        rawItem.ayah,
+        nextReview:  nextReview,
+        reviewCycle: nextCycle,
       };
 
+      const idx = stored.findIndex(s => typeof s === 'object' && s.surah === rawItem.surah && s.ayah === rawItem.ayah);
       if (idx >= 0) stored[idx] = updated;
       else stored.push(updated);
       localStorage.setItem('reviewList', JSON.stringify(stored));

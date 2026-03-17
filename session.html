@@ -416,10 +416,45 @@
       }
     }
 
+    /* ── DATE HELPER ── */
+    function getDatePlusDays(days) {
+      const date = new Date();
+      date.setDate(date.getDate() + days);
+      return date.toISOString().split('T')[0];
+    }
+
+    /* ── SAVE MEMORIZED AYAT TO REVIEWLIST ── */
+    function saveMemorizedAyat() {
+      const surah      = parseInt(localStorage.getItem('currentSurah') || '78', 10);
+      const ayahBase   = parseInt(localStorage.getItem('currentAyah')  || '0',  10);
+      const count      = ayatList.length;
+
+      const reviewList = JSON.parse(localStorage.getItem('reviewList') || '[]');
+
+      for (let i = 0; i < count; i++) {
+        const ayah = ayahBase + i + 1;
+        /* Avoid duplicates */
+        const exists = reviewList.findIndex(r => typeof r === 'object' && r.surah === surah && r.ayah === ayah);
+        const entry = {
+          surah:       surah,
+          ayah:        ayah,
+          nextReview:  getDatePlusDays(1),
+          reviewCycle: 1,
+        };
+        if (exists >= 0) reviewList[exists] = entry;
+        else reviewList.push(entry);
+      }
+
+      localStorage.setItem('reviewList',      JSON.stringify(reviewList));
+      localStorage.setItem('currentAyah',     String(ayahBase + count));
+      localStorage.setItem('todayMemorized',  String(count));
+    }
+
     /* ── NEXT AYAT ── */
     function nextAyat() {
       const total = ayatList.length;
       if (currentIndex === total - 1) {
+        saveMemorizedAyat();
         navigateTo('revision.html');
         return;
       }
