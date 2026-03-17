@@ -506,6 +506,7 @@
         if (!res.ok) throw new Error('API error');
         const json = await res.json();
         const d    = json.data;
+        if (!Array.isArray(d) || !d[0] || !d[1] || !d[2]) throw new Error('Unexpected API response');
         return { arabic: d[0].text, transliteration: d[1].text, translation: d[2].text };
       } catch (e) {
         clearTimeout(timer);
@@ -655,6 +656,7 @@
       } catch (e) {
         document.getElementById('loading-wrap').innerHTML = `
           <p class="error-text">Impossible de charger les versets.<br>Vérifie ta connexion.</p>
+          <button onclick="init()" style="margin-top:16px;padding:10px 24px;background:#163026;color:#fff;border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer">↺ Réessayer</button>
         `;
       }
     }
