@@ -707,6 +707,8 @@
       setTimeout(() => { window.location.href = url; }, 350);
     }
 
+    function init() {
+
     /* ── CITATIONS (indexed by day of week 0–6) ── */
     const CITATIONS = [
       { text: '« La meilleure des adorations est la récitation du Coran. »',                       attr: '— Shu\'ab al-Iman' },
@@ -919,7 +921,10 @@
       calGridEl.appendChild(div);
     }
 
-    /* ── TAB SWITCHING ── */
+    } /* end init() */
+    init();
+
+    /* ── TAB SWITCHING (global — called from onclick) ── */
     function switchTab(tab) {
       document.getElementById('section-today').classList.toggle('active',    tab === 'today');
       document.getElementById('section-progress').classList.toggle('active', tab === 'progress');
