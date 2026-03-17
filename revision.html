@@ -445,7 +445,7 @@
         <span class="empty-emoji">🎉</span>
         <p class="empty-title">Aucune révision aujourd'hui</p>
         <p class="empty-sub">Tu as tout révisé. Reviens demain.</p>
-        <button class="btn-dashboard" onclick="navigateTo('index.html')">Retour au dashboard</button>
+        <button class="btn-dashboard" onclick="localStorage.setItem('todayRevised','0');navigateTo('done.html')">Continuer</button>
       `;
       document.getElementById('main-content').appendChild(el);
     }

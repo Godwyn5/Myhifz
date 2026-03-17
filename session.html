@@ -338,6 +338,7 @@
     const sessionInProgress = sessionStorage.getItem('sessionInProgress');
     if (lastSessionDate === todayStr && !sessionInProgress) {
       navigateTo('index.html');
+      return;
     }
     sessionStorage.setItem('sessionInProgress', '1');
 
@@ -380,6 +381,7 @@
         sessionStorage.removeItem('surahAdvanced');
         navigateTo('index.html');
       }
+      return;
     }
 
     const surahName = SURAH_NAMES[currentSurah] || "An-Naba'";
@@ -502,7 +504,18 @@
       const total = ayatList.length;
       if (currentIndex === total - 1) {
         saveMemorizedAyat();
-        navigateTo('revision.html');
+        /* If no revisions due today, skip revision.html and go straight to done.html */
+        const reviewList   = JSON.parse(localStorage.getItem('reviewList') || '[]');
+        const todayForNav  = new Date().toISOString().slice(0, 10);
+        const hasDueToday  = reviewList.some(item =>
+          typeof item === 'object' && item.nextReview && item.nextReview <= todayForNav
+        );
+        if (hasDueToday) {
+          navigateTo('revision.html');
+        } else {
+          localStorage.setItem('todayRevised', '0');
+          navigateTo('done.html');
+        }
         return;
       }
       const card = document.getElementById('ayat-card');

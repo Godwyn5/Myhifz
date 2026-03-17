@@ -762,17 +762,6 @@
     }
     function toDateStr(d) { return d.toISOString().slice(0, 10); }
 
-    /* ── DEBUG ── */
-    console.log('DEBUG localStorage:', {
-      userName:        localStorage.getItem('userName'),
-      userTime:        localStorage.getItem('userTime'),
-      currentSurah:    localStorage.getItem('currentSurah'),
-      currentAyah:     localStorage.getItem('currentAyah'),
-      currentSurahName:localStorage.getItem('currentSurahName'),
-      streak:          localStorage.getItem('streak'),
-      aiPlan:          localStorage.getItem('aiPlan'),
-    });
-
     /* ── LOAD LOCALSTORAGE ── */
     const userName        = localStorage.getItem('userName')        || 'Youssef';
     const userTime        = localStorage.getItem('userTime')        || '20';
@@ -805,7 +794,7 @@
     let memEnd   = currentAyah + ayatPerDay;
 
     if (SURAHS[memSurah] && memStart > SURAHS[memSurah].a) {
-      memSurah = Math.min(memSurah + 1, 114);
+      memSurah++;
       memStart = 1;
       memEnd   = ayatPerDay;
     }
