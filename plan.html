@@ -395,21 +395,31 @@
     };
 
     /* ── LOAD DATA ── */
-    const userName    = localStorage.getItem('userName')    || '';
-    const userTime    = localStorage.getItem('userTime')    || '20';
+    const userName      = localStorage.getItem('userName')      || '';
+    const userTime      = localStorage.getItem('userTime')      || '20';
     const userIntention = localStorage.getItem('userIntention') || '';
+    const aiPlan        = JSON.parse(localStorage.getItem('aiPlan') || 'null');
 
-    localStorage.setItem('userName', userName);
-
-    const plan = timeMap[userTime] || timeMap['20'];
+    /* Derive plan values — aiPlan takes priority over timeMap */
+    const fallback = timeMap[userTime] || timeMap['20'];
+    const plan = aiPlan ? {
+      ayat:   (aiPlan.ayahPerDay  || fallback.ayat) * (aiPlan.daysPerWeek || fallback.days),
+      days:   aiPlan.daysPerWeek       || fallback.days,
+      min:    aiPlan.minutesPerSession  || fallback.min,
+      memMin: aiPlan.memorizationMinutes || fallback.memMin,
+      revMin: aiPlan.revisionMinutes    || fallback.revMin,
+    } : fallback;
 
     /* ── POPULATE UI ── */
-    document.getElementById('hero-name').textContent = (userName && userName.length > 0) ? userName : 'toi';
+    const displayName = (userName && userName.length > 0) ? userName : 'toi';
+    document.getElementById('hero-name').textContent = displayName;
 
     document.getElementById('session-mem').textContent = `Nouvelle mémorisation — ${plan.memMin}min`;
     document.getElementById('session-rev').textContent = `Révision quotidienne — ${plan.revMin}min`;
 
-    const motivation = motivationMap[userIntention] || 'Allah facilite le chemin de celui qui cherche à s\'en rapprocher.';
+    const motivation = (aiPlan && aiPlan.motivationPhrase)
+      ? aiPlan.motivationPhrase
+      : (motivationMap[userIntention] || 'Allah facilite le chemin de celui qui cherche à s\'en rapprocher.');
     document.getElementById('motivation-text').textContent = motivation;
 
     /* ── COUNT UP ANIMATION ── */

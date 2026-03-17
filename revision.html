@@ -444,7 +444,7 @@
         <span class="empty-emoji">🎉</span>
         <p class="empty-title">Aucune révision aujourd'hui</p>
         <p class="empty-sub">Tu as tout révisé. Reviens demain.</p>
-        <button class="btn-dashboard" onclick="navigateTo('done.html')">Retour au dashboard</button>
+        <button class="btn-dashboard" onclick="navigateTo('index.html')">Retour au dashboard</button>
       `;
       document.getElementById('main-content').appendChild(el);
     }
@@ -611,6 +611,7 @@
 
       /* Advance or finish */
       if (currentIndex >= dueList.length - 1) {
+        localStorage.setItem('todayRevised', String(dueList.length));
         navigateTo('done.html');
         return;
       }

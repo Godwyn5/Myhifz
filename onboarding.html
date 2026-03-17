@@ -220,6 +220,9 @@
           autreInput.classList.remove('visible');
         }
       }
+      if (qId === 'q2') {
+        localStorage.setItem('userLevel', btn.textContent.trim());
+      }
       if (qId === 'q3') {
         const label = btn.textContent.trim();
         const timeMap = {
@@ -229,6 +232,9 @@
           '45 minutes ou plus': '45',
         };
         localStorage.setItem('userTime', timeMap[label] || label.replace(/[^0-9]/g, '').slice(0, 2));
+      }
+      if (qId === 'q4') {
+        localStorage.setItem('userObstacle', btn.textContent.trim());
       }
     }
 

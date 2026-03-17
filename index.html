@@ -812,13 +812,18 @@
     document.getElementById('mem-tag').textContent = `${memEnd - memStart + 1} ayat · ${userTime} min`;
 
     const reviewEl = document.getElementById('review-list-el');
-    if (reviewList.length === 0) {
+    const dueToday = reviewList.filter(item => {
+      if (typeof item === 'object' && item.nextReview) return item.nextReview <= todayStr;
+      return false;
+    });
+    if (dueToday.length === 0) {
       reviewEl.innerHTML = '<span class="review-empty-badge">Aucune révision 🎉</span>';
     } else {
-      reviewList.forEach(item => {
+      dueToday.forEach(item => {
         const p = document.createElement('p');
         p.className = 'review-item';
-        p.textContent = item;
+        const surahName = SURAHS[item.surah] ? SURAHS[item.surah].n : 'Sourate';
+        p.textContent = surahName + ' • Ayat ' + item.ayah;
         reviewEl.appendChild(p);
       });
     }
