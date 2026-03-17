@@ -425,7 +425,6 @@
 
     /* ── LOAD & FILTER REVIEW LIST ── */
     const rawList   = JSON.parse(localStorage.getItem('reviewList') || '[]');
-    /* Bug 6: strip any non-object or incomplete entries */
     const cleanList = rawList.filter(item => typeof item === 'object' && item.surah && item.ayah);
     localStorage.setItem('reviewList', JSON.stringify(cleanList));
 

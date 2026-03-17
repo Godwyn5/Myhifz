@@ -300,8 +300,16 @@
     /* ── DATE HELPER ── */
     function toDateStr(d) { return d.toISOString().slice(0, 10); }
 
-    /* ── GUARD: block direct access without a completed session ── */
+    /* ── RESET DAILY COUNTERS if new day (mirrors index.html logic) ── */
     const todayCheck    = new Date().toISOString().slice(0, 10);
+    const lastResetDate = localStorage.getItem('lastResetDate') || '';
+    if (lastResetDate !== todayCheck) {
+      localStorage.setItem('todayMemorized', '0');
+      localStorage.setItem('todayRevised',   '0');
+      localStorage.setItem('lastResetDate',  todayCheck);
+    }
+
+    /* ── GUARD: block direct access without a completed session ── */
     const todayMemCheck = parseInt(localStorage.getItem('todayMemorized') || '0', 10);
     const todayRevCheck = parseInt(localStorage.getItem('todayRevised')   || '0', 10);
     /* Allow only if memorization or revision happened today */

@@ -487,15 +487,18 @@
 
       for (let i = 0; i < count; i++) {
         const ayah = ayahBase + i + 1;
-        /* Avoid duplicates */
-        const exists = reviewList.findIndex(r => typeof r === 'object' && r.surah === surah && r.ayah === ayah);
+        /* Avoid duplicates — preserve existing reviewCycle if present */
+        const existsIdx = reviewList.findIndex(r => typeof r === 'object' && r.surah === surah && r.ayah === ayah);
+        const existingCycle = (existsIdx >= 0 && reviewList[existsIdx].reviewCycle)
+          ? reviewList[existsIdx].reviewCycle
+          : 1;
         const entry = {
           surah:       surah,
           ayah:        ayah,
           nextReview:  getDatePlusDays(1),
-          reviewCycle: 1,
+          reviewCycle: existingCycle,
         };
-        if (exists >= 0) reviewList[exists] = entry;
+        if (existsIdx >= 0) reviewList[existsIdx] = entry;
         else reviewList.push(entry);
       }
 
@@ -509,13 +512,13 @@
     function nextAyat() {
       const total = ayatList.length;
       if (currentIndex === total - 1) {
-        saveMemorizedAyat();
-        /* If no revisions due today, skip revision.html and go straight to done.html */
-        const reviewList   = JSON.parse(localStorage.getItem('reviewList') || '[]');
-        const todayForNav  = new Date().toISOString().slice(0, 10);
-        const hasDueToday  = reviewList.some(item =>
+        /* Check for due revisions BEFORE saveMemorizedAyat() overwrites reviewList */
+        const reviewListBefore = JSON.parse(localStorage.getItem('reviewList') || '[]');
+        const todayForNav      = new Date().toISOString().slice(0, 10);
+        const hasDueToday      = reviewListBefore.some(item =>
           typeof item === 'object' && item.nextReview && item.nextReview <= todayForNav
         );
+        saveMemorizedAyat();
         if (hasDueToday) {
           navigateTo('revision.html');
         } else {

@@ -385,8 +385,10 @@
   </footer>
 
   <script>
-    // Ne jamais effacer localStorage depuis la landing page
-    // Les données utilisateur doivent être préservées
+    // Redirect returning users directly to dashboard
+    if (localStorage.getItem('onboardingDone')) {
+      window.location.replace('index.html');
+    }
 
     function navigateTo(url) {
       document.body.style.transition = 'opacity 0.35s ease';

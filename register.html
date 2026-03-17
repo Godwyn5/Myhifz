@@ -420,9 +420,16 @@
       if (!valid) return;
 
       /* ── SAVE & REDIRECT ── */
-      localStorage.setItem('userName',  name);
-      localStorage.setItem('userEmail', email);
-      localStorage.setItem('onboardingDone', '1');
+      localStorage.setItem('userName',         name);
+      localStorage.setItem('userEmail',        email);
+      localStorage.setItem('onboardingDone',   '1');
+      /* Initialize required keys if not already set by onboarding */
+      if (!localStorage.getItem('currentSurah'))     localStorage.setItem('currentSurah',     '78');
+      if (!localStorage.getItem('currentAyah'))      localStorage.setItem('currentAyah',      '0');
+      if (!localStorage.getItem('currentSurahName')) localStorage.setItem('currentSurahName', "An-Naba'");
+      if (!localStorage.getItem('userTime'))         localStorage.setItem('userTime',         '20');
+      if (!localStorage.getItem('reviewList'))       localStorage.setItem('reviewList',       '[]');
+      if (!localStorage.getItem('streak'))           localStorage.setItem('streak',           '0');
       navigateTo('index.html');
     }
 
