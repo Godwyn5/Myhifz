@@ -597,11 +597,11 @@
 
       let nextCycle, nextReview;
       if (knew) {
-        nextCycle  = currentCycle + 1;
-        const days = CYCLE_DAYS[Math.min(nextCycle, CYCLE_DAYS.length - 1)];
+        nextCycle  = Math.min(currentCycle + 1, CYCLE_DAYS.length - 1);
+        const days = CYCLE_DAYS[nextCycle];
         nextReview = getDatePlusDays(days);
       } else {
-        nextCycle  = currentCycle; /* cycle unchanged on forget */
+        nextCycle  = Math.max(1, currentCycle - 1); /* step back one level on forget */
         nextReview = getDatePlusDays(1); /* review again tomorrow */
       }
 

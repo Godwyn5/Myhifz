@@ -424,6 +424,21 @@ Réponds UNIQUEMENT en JSON avec cette structure exacte :
         localStorage.setItem('reviewList',       '[]');
         localStorage.setItem('streak',           '0');
         localStorage.removeItem('lastSessionDate');
+        /* Provide a minimal aiPlan so plan.html uses real values, not defaults */
+        const userTimeFallback = localStorage.getItem('userTime') || '20';
+        const ayatFallbackMap  = { '10': 1, '20': 2, '30': 3, '45': 4 };
+        const ayatFallback     = ayatFallbackMap[userTimeFallback] || 2;
+        const fallbackPlan = {
+          surahStart:           78,
+          ayahPerDay:           ayatFallback,
+          daysPerWeek:          5,
+          minutesPerSession:    parseInt(userTimeFallback, 10),
+          memorizationMinutes:  Math.round(parseInt(userTimeFallback, 10) * 0.4),
+          revisionMinutes:      Math.round(parseInt(userTimeFallback, 10) * 0.6),
+          motivationPhrase:     "Allah facilite le chemin de celui qui cherche à s'en rapprocher.",
+          firstSurahName:       "An-Naba'",
+        };
+        localStorage.setItem('aiPlan', JSON.stringify(fallbackPlan));
       })
       .finally(() => {
         /* Signal animation to finish */

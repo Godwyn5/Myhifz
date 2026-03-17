@@ -300,22 +300,22 @@
     /* ── DATE HELPER ── */
     function toDateStr(d) { return d.toISOString().slice(0, 10); }
 
-    /* ── RESET DAILY COUNTERS if new day (mirrors index.html logic) ── */
+    /* ── GUARD: block direct access without a completed session ── */
     const todayCheck    = new Date().toISOString().slice(0, 10);
     const lastResetDate = localStorage.getItem('lastResetDate') || '';
-    if (lastResetDate !== todayCheck) {
-      localStorage.setItem('todayMemorized', '0');
-      localStorage.setItem('todayRevised',   '0');
-      localStorage.setItem('lastResetDate',  todayCheck);
-    }
-
-    /* ── GUARD: block direct access without a completed session ── */
     const todayMemCheck = parseInt(localStorage.getItem('todayMemorized') || '0', 10);
     const todayRevCheck = parseInt(localStorage.getItem('todayRevised')   || '0', 10);
     /* Allow only if memorization or revision happened today */
     if (todayMemCheck === 0 && todayRevCheck === 0) {
       navigateTo('index.html');
       return;
+    }
+
+    /* ── RESET DAILY COUNTERS if new day (only after guard passes) ── */
+    if (lastResetDate !== todayCheck) {
+      localStorage.setItem('lastResetDate', todayCheck);
+      /* Note: do NOT reset todayMemorized/todayRevised here — we just passed the guard
+         meaning valid values are present. index.html will reset them tomorrow. */
     }
 
     /* ── LOAD & UPDATE LOCALSTORAGE ── */
