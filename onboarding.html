@@ -373,18 +373,26 @@ Réponds UNIQUEMENT en JSON avec cette structure exacte :
         const clean = raw.replace(/```json|```/g, '').trim();
         const data = JSON.parse(clean);
 
-        localStorage.setItem('aiPlan',        JSON.stringify(data));
-        localStorage.setItem('currentSurah',  data.surahStart);
-        localStorage.setItem('currentAyah',   1);
-        localStorage.setItem('userTime',      data.minutesPerSession);
+        localStorage.setItem('aiPlan',            JSON.stringify(data));
+        localStorage.setItem('currentSurah',      String(data.surahStart));
+        localStorage.setItem('currentAyah',       '0');
+        localStorage.setItem('currentSurahName',  data.firstSurahName || '');
+        localStorage.setItem('userTime',          String(data.minutesPerSession));
+        localStorage.setItem('reviewList',        '[]');
+        localStorage.setItem('streak',            '0');
+        localStorage.removeItem('lastSessionDate');
         if (data.motivationPhrase) {
           localStorage.setItem('motivationPhrase', data.motivationPhrase);
         }
       })
       .catch(() => {
         /* Fallback defaults — plan.html will handle missing values gracefully */
-        localStorage.setItem('currentSurah', '78');
-        localStorage.setItem('currentAyah',  '1');
+        localStorage.setItem('currentSurah',     '78');
+        localStorage.setItem('currentAyah',      '0');
+        localStorage.setItem('currentSurahName', "An-Naba'");
+        localStorage.setItem('reviewList',       '[]');
+        localStorage.setItem('streak',           '0');
+        localStorage.removeItem('lastSessionDate');
       })
       .finally(() => {
         /* Signal animation to finish */

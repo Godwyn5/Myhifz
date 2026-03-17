@@ -304,16 +304,20 @@
     let streak         = parseInt(localStorage.getItem('streak')         || '0', 10);
     const todayMem     = parseInt(localStorage.getItem('todayMemorized') || '0', 10);
     const todayRev     = parseInt(localStorage.getItem('todayRevised')   || '0', 10);
-    const totalMem     = parseInt(localStorage.getItem('totalMemorized') || '0', 10);
+    let   totalMem     = parseInt(localStorage.getItem('totalMemorized') || '0', 10);
     const todayStr     = toDateStr(new Date());
 
     const lastSessionDate = localStorage.getItem('lastSessionDate') || '';
 
-    /* Only increment streak if session not already counted today */
+    /* Only update stats once per session day */
     if (lastSessionDate !== todayStr) {
       streak = streak + 1;
       localStorage.setItem('streak', String(streak));
       localStorage.setItem('lastSessionDate', todayStr);
+
+      /* Accumulate total memorized */
+      totalMem = totalMem + todayMem;
+      localStorage.setItem('totalMemorized', String(totalMem));
     }
 
     /* Update sessionDates array */

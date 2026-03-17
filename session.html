@@ -355,14 +355,22 @@
     let currentIndex = 0;
     let prefetched   = []; /* filled at init with all ayat data */
 
-    /* ── FETCH ONE AYAT ── */
+    /* ── FETCH ONE AYAT (5s timeout) ── */
     async function fetchOne(surah, ayah) {
-      const url = `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/editions/quran-uthmani,en.transliteration,fr.hamidullah`;
-      const res  = await fetch(url);
-      if (!res.ok) throw new Error('API error');
-      const json = await res.json();
-      const d    = json.data;
-      return { arabic: d[0].text, transliteration: d[1].text, translation: d[2].text };
+      const url        = `https://api.alquran.cloud/v1/ayah/${surah}:${ayah}/editions/quran-uthmani,en.transliteration,fr.hamidullah`;
+      const controller = new AbortController();
+      const timer      = setTimeout(() => controller.abort(), 5000);
+      try {
+        const res  = await fetch(url, { signal: controller.signal });
+        clearTimeout(timer);
+        if (!res.ok) throw new Error('API error');
+        const json = await res.json();
+        const d    = json.data;
+        return { arabic: d[0].text, transliteration: d[1].text, translation: d[2].text };
+      } catch (e) {
+        clearTimeout(timer);
+        throw e;
+      }
     }
 
     /* ── SHOW LOADING ── */

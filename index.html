@@ -767,6 +767,7 @@
     const lastSessionDate = localStorage.getItem('lastSessionDate') || '';
     const currentSurah    = parseInt(localStorage.getItem('currentSurah')    || '78', 10);
     const currentAyah     = parseInt(localStorage.getItem('currentAyah')     || '0',  10);
+    const currentSurahName = localStorage.getItem('currentSurahName') || '';
     const totalMemorized  = parseInt(localStorage.getItem('totalMemorized')  || '0',  10);
     const sessionDates    = JSON.parse(localStorage.getItem('sessionDates')  || '[]');
     const reviewList      = JSON.parse(localStorage.getItem('reviewList')    || '[]');
@@ -805,7 +806,8 @@
     document.getElementById('streak-number').textContent = streak;
 
     /* ── POPULATE SESSION CARD ── */
-    document.getElementById('mem-surah-name').textContent = surahData.n;
+    const displaySurahName = currentSurahName || surahData.n;
+    document.getElementById('mem-surah-name').textContent = displaySurahName;
     document.getElementById('mem-ayat-range').textContent = `Ayat ${memStart} à ${memEnd}`;
     document.getElementById('mem-tag').textContent = `${memEnd - memStart + 1} ayat · ${userTime} min`;
 
@@ -825,8 +827,8 @@
     if (sessionDoneToday) {
       document.getElementById('btn-wrap').innerHTML = `
         <div class="btn-done-wrap">
-          <div class="btn-done">Session complétée ✓</div>
-          <p class="btn-done-sub">Reviens demain pour continuer ton Hifz.</p>
+          <div class="btn-done">Session du jour complétée ✓</div>
+          <p class="btn-done-sub">Reviens demain pour continuer.</p>
         </div>
       `;
     }
