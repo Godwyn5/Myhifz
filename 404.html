@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyHifz — 404</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400&family=Amiri:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background-color:#F5F0E6;color:#163026;font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;animation:bodyFadeIn .5s ease forwards}
+    @keyframes bodyFadeIn{to{opacity:1}}
+    .calligraphy{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Amiri',serif;font-size:320px;color:#163026;opacity:.04;pointer-events:none;line-height:1;white-space:nowrap;user-select:none}
+    .content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 24px;opacity:0;animation:contentFadeUp .6s ease .1s forwards}
+    @keyframes contentFadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .logo{font-family:'Amiri',serif;font-weight:700;font-size:26px;color:#163026}
+    .error-code{font-family:'Playfair Display',serif;font-weight:700;font-size:96px;color:#163026;line-height:1;margin-top:40px}
+    .error-title{font-family:'Playfair Display',serif;font-weight:600;font-size:32px;color:#163026;margin-top:12px}
+    .error-sub{font-family:'DM Sans',sans-serif;font-weight:400;font-size:16px;color:#6B6357;margin-top:12px}
+    .btn-home{display:inline-block;margin-top:32px;background-color:#163026;color:#FFFFFF;font-family:'Playfair Display',serif;font-weight:600;font-size:17px;padding:16px 48px;border-radius:12px;border:none;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;box-shadow:0 4px 24px rgba(15,35,24,.2)}
+    .btn-home:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(15,35,24,.32)}
+    @media(max-width:480px){.error-code{font-size:72px}.error-title{font-size:24px}.calligraphy{font-size:200px}}
+  </style>
+</head>
+<body>
+
+  <div class="calligraphy" aria-hidden="true">الله</div>
+
+  <div class="content">
+    <span class="logo">MyHifz</span>
+    <div class="error-code">404</div>
+    <h1 class="error-title">Page introuvable.</h1>
+    <p class="error-sub">Cette page n'existe pas ou a été déplacée.</p>
+    <button class="btn-home" onclick="navigateTo('landing.html')">Retour à l'accueil</button>
+  </div>
+
+  <script>
+    function navigateTo(url) {
+      document.body.style.transition = 'opacity 0.35s ease';
+      document.body.style.opacity = '0';
+      setTimeout(() => { window.location.href = url; }, 350);
+    }
+  </script>
+
+</body>
+</html>
