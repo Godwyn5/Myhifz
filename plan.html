@@ -443,8 +443,9 @@
           entry.target.classList.add('visible');
           if (entry.target.classList.contains('stats-card')) {
             setTimeout(() => {
+              const statDays = (aiPlan && aiPlan.daysPerWeek) ? aiPlan.daysPerWeek : plan.days;
               countUp(document.getElementById('stat-ayat'), plan.ayat, 1500);
-              countUp(document.getElementById('stat-days'), plan.days, 1500);
+              countUp(document.getElementById('stat-days'), statDays,  1500);
               countUp(document.getElementById('stat-min'),  plan.min,  1500);
             }, 200);
           }

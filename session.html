@@ -329,6 +329,16 @@
       'Al-Falaq','An-Nas',
     ];
 
+    /* ── DATE HELPER ── */
+    function toDateStr(d) { return d.toISOString().slice(0, 10); }
+    const todayStr        = toDateStr(new Date());
+    const lastSessionDate = localStorage.getItem('lastSessionDate') || '';
+
+    /* ── BUG 1+2: Block re-entry if session already done today ── */
+    if (lastSessionDate === todayStr) {
+      navigateTo('index.html');
+    }
+
     /* ── LOAD LOCALSTORAGE ── */
     const userTime     = localStorage.getItem('userTime')     || '20';
     const currentSurah = parseInt(localStorage.getItem('currentSurah') || '78', 10);

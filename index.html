@@ -797,6 +797,14 @@
       memEnd   = ayatPerDay;
     }
 
+    if (memSurah > 114) {
+      document.getElementById('mem-surah-name').textContent = 'Coran complet ✓';
+      document.getElementById('mem-ayat-range').textContent = 'Félicitations, tu es Hafiz !';
+      document.getElementById('mem-tag').textContent        = 'MashaAllah';
+      document.getElementById('btn-wrap').innerHTML = '<p style="text-align:center;font-family:\'Playfair Display\',serif;color:#163026">Tu as mémorisé le Coran complet. Que Allah te récompense.</p>';
+      return;
+    }
+
     const surahData  = SURAHS[memSurah] || { n: "An-Naba'", a: 40 };
     memEnd = Math.min(memEnd, surahData.a);
 

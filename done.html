@@ -309,15 +309,13 @@
 
     const lastSessionDate = localStorage.getItem('lastSessionDate') || '';
 
-    /* Only update stats once per session day */
+    /* Guard runs BEFORE any increment — only update once per day */
     if (lastSessionDate !== todayStr) {
-      streak = streak + 1;
-      localStorage.setItem('streak', String(streak));
-      localStorage.setItem('lastSessionDate', todayStr);
-
-      /* Accumulate total memorized */
+      streak   = streak + 1;
       totalMem = totalMem + todayMem;
-      localStorage.setItem('totalMemorized', String(totalMem));
+      localStorage.setItem('streak',          String(streak));
+      localStorage.setItem('totalMemorized',  String(totalMem));
+      localStorage.setItem('lastSessionDate', todayStr);
     }
 
     /* Update sessionDates array */

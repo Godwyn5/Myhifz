@@ -425,12 +425,13 @@
 
     /* ── LOAD & FILTER REVIEW LIST ── */
     const rawList   = JSON.parse(localStorage.getItem('reviewList') || '[]');
-    /* Support both plain strings and objects {surah, ayah, nextReview} */
-    const dueList   = rawList.filter(item => {
-      if (typeof item === 'object' && item.nextReview) {
-        return item.nextReview <= todayStr;
-      }
-      return true; /* plain string items are always due */
+    /* Bug 6: strip any non-object or incomplete entries */
+    const cleanList = rawList.filter(item => typeof item === 'object' && item.surah && item.ayah);
+    localStorage.setItem('reviewList', JSON.stringify(cleanList));
+
+    const dueList = cleanList.filter(item => {
+      if (item.nextReview) return item.nextReview <= todayStr;
+      return true;
     });
 
     /* ── RENDER EMPTY STATE ── */
