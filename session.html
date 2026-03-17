@@ -334,10 +334,12 @@
     const todayStr        = toDateStr(new Date());
     const lastSessionDate = localStorage.getItem('lastSessionDate') || '';
 
-    /* ── BUG 1+2: Block re-entry if session already done today ── */
-    if (lastSessionDate === todayStr) {
+    /* ── Block re-entry if session already done today (allow in-progress session) ── */
+    const sessionInProgress = sessionStorage.getItem('sessionInProgress');
+    if (lastSessionDate === todayStr && !sessionInProgress) {
       navigateTo('index.html');
     }
+    sessionStorage.setItem('sessionInProgress', '1');
 
     /* ── LOAD LOCALSTORAGE ── */
     const userTime     = localStorage.getItem('userTime')     || '20';
@@ -492,6 +494,7 @@
       localStorage.setItem('reviewList',      JSON.stringify(reviewList));
       localStorage.setItem('currentAyah',     String(ayahBase + count));
       localStorage.setItem('todayMemorized',  String(count));
+      sessionStorage.removeItem('sessionInProgress');
     }
 
     /* ── NEXT AYAT ── */

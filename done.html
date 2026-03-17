@@ -301,8 +301,10 @@
     function toDateStr(d) { return d.toISOString().slice(0, 10); }
 
     /* ── GUARD: block direct access without a completed session ── */
-    const todayMemCheck = localStorage.getItem('todayMemorized');
-    if (!todayMemCheck || todayMemCheck === '0') {
+    const lastSession    = localStorage.getItem('lastSessionDate') || '';
+    const todayCheck     = new Date().toISOString().slice(0, 10);
+    const todayMemCheck  = parseInt(localStorage.getItem('todayMemorized') || '0', 10);
+    if (lastSession === todayCheck && todayMemCheck === 0) {
       navigateTo('index.html');
     }
 
