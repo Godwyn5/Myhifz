@@ -371,7 +371,13 @@
       localStorage.setItem('currentSurah',     String(nextSurah));
       localStorage.setItem('currentAyah',      '0');
       localStorage.setItem('currentSurahName', SURAH_NAMES[nextSurah] || '');
-      navigateTo('session.html');
+      if (!sessionStorage.getItem('surahAdvanced')) {
+        sessionStorage.setItem('surahAdvanced', '1');
+        navigateTo('session.html');
+      } else {
+        sessionStorage.removeItem('surahAdvanced');
+        navigateTo('index.html');
+      }
     }
 
     const surahName = SURAH_NAMES[currentSurah] || "An-Naba'";

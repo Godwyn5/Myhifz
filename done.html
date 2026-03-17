@@ -300,6 +300,12 @@
     /* ── DATE HELPER ── */
     function toDateStr(d) { return d.toISOString().slice(0, 10); }
 
+    /* ── GUARD: block direct access without a completed session ── */
+    const todayMemCheck = localStorage.getItem('todayMemorized');
+    if (!todayMemCheck || todayMemCheck === '0') {
+      navigateTo('index.html');
+    }
+
     /* ── LOAD & UPDATE LOCALSTORAGE ── */
     let streak         = parseInt(localStorage.getItem('streak')         || '0', 10);
     const todayMem     = parseInt(localStorage.getItem('todayMemorized') || '0', 10);

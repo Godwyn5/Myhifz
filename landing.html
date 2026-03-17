@@ -385,9 +385,8 @@
   </footer>
 
   <script>
-    if (!localStorage.getItem('onboardingDone')) {
-      localStorage.clear();
-    }
+    // Ne jamais effacer localStorage depuis la landing page
+    // Les données utilisateur doivent être préservées
 
     function navigateTo(url) {
       document.body.style.transition = 'opacity 0.35s ease';
