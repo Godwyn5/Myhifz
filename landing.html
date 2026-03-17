@@ -385,6 +385,10 @@
   </footer>
 
   <script>
+    if (!localStorage.getItem('onboardingDone')) {
+      localStorage.clear();
+    }
+
     function navigateTo(url) {
       document.body.style.transition = 'opacity 0.35s ease';
       document.body.style.opacity = '0';

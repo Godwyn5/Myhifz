@@ -337,7 +337,10 @@
           setTimeout(() => {
             document.getElementById('loading-screen').style.transition = 'opacity 0.4s ease';
             document.getElementById('loading-screen').style.opacity = '0';
-            setTimeout(() => { window.location.href = 'plan.html'; }, 400);
+            setTimeout(() => {
+              localStorage.setItem('onboardingDone', '1');
+              window.location.href = 'plan.html';
+            }, 400);
           }, 800);
         }
       }
